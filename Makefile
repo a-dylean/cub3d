@@ -2,7 +2,7 @@ NAME = cub3d
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -fPIC
 INCLUDES = -I includes -I libft -I mlx
-SRC = src/main.c
+SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
 
