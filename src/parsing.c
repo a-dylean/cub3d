@@ -20,9 +20,8 @@ int	get_map_height(char *filename)
 			height++;
 			free(new_line);
 			new_line = get_next_line(fd);
-				// Fetch a new line for the next iteration
 			if (!new_line)
-				break ; // Break out of the loop if no more lines are available
+				break ;
 		}
 		if (new_line)
 			free(new_line);
@@ -51,35 +50,20 @@ static void	init_empty_map(t_cub *cub)
 	}
 }
 
-void	populate_map(int fd, t_cub *cub)
+void	populate_map(char *line, t_cub *cub, int *i)
 {
-	char	*new_line;
-	int		i;
-
-	i = 0;
-	init_empty_map(cub);
-	while (1)
-	{
-		new_line = get_next_line(fd);
-		if (!new_line)
-			break ;
-		while (new_line && (new_line[0] == '1' || new_line[0] == ' ')
-			&& i < cub->map_height)
-		{
-			cub->map[i] = ft_strdup(new_line);
-			if (!cub->map[i])
-				free_and_exit("Memory allocation failed", cub, new_line);
-			cub->map_width = (int)ft_strlen(new_line);
-			free(new_line);
-			i++;
-		}
-	}
+	cub->map[*i] = ft_strdup(line);
+	if (!cub->map[*i])
+		free_and_exit("Memory allocation failed", cub, line);
+	// cub->map_width = (int)ft_strlen(line);
+	free(line);
+	(*i)++;
 }
 
-void create_texture(t_cub *cub, char *line)
+void	create_texture(t_cub *cub, char *line)
 {
-	char *orientation;
-	char *path;
+	char	*orientation;
+	char	*path;
 
 	orientation = ft_split(line, ' ')[0];
 	path = ft_split(line, ' ')[1];
@@ -88,48 +72,62 @@ void create_texture(t_cub *cub, char *line)
 	free(path);
 }
 
-void	parse_textures(int fd, t_cub *cub)
+void	parse_textures(char *line, t_cub *cub)
 {
-	char	*new_line;
-
-	while (1)
-	{
-		new_line = get_next_line(fd);
-		if (!new_line)
-			break ;
-		if (new_line[0] == 'N' && new_line[1] == 'O')
-		{
-			create_texture(cub, new_line);
-		}
-		else if (new_line[0] == 'S' && new_line[1] == 'O')
-			create_texture(cub, new_line);
-		else if (new_line[0] == 'W' && new_line[1] == 'E')
-			create_texture(cub, new_line);
-		else if (new_line[0] == 'E' && new_line[1] == 'A')
-			create_texture(cub, new_line);
-		else if (new_line[0] == 'S' && new_line[1] == ' ')
-			create_texture(cub, new_line);
-		free(new_line);
-	}
-	for (int i = 0; i < 5; i++)
-	{
-		printf("Orientation[%d]: %s\n", i, cub->txtr->orientation);
-		printf("Path[%d]: %s\n", i, cub->txtr->path);
-		cub->txtr = cub->txtr->next;
-	}
+	if (line[0] == 'N' && line[1] == 'O')
+		create_texture(cub, line);
+	else if (line[0] == 'S' && line[1] == 'O')
+		create_texture(cub, line);
+	else if (line[0] == 'W' && line[1] == 'E')
+		create_texture(cub, line);
+	else if (line[0] == 'E' && line[1] == 'A')
+		create_texture(cub, line);
+	else if (line[0] == 'S' && line[1] == ' ')
+		create_texture(cub, line);
+	else if (line[0] == 'F' && line[1] == ' ')
+		cub->textures.floor_color = ft_atoi(ft_split(line, ' ')[1]);
+	else if (line[0] == 'C' && line[1] == ' ')
+		cub->textures.ceiling_color = ft_atoi(ft_split(line, ' ')[1]);
+	// free(line);
 }
 
 void	parse_input(char *path, t_cub *cub)
 {
 	int fd;
+	char *new_line;
+	int i = 0;
 
 	if (!valid_format(path))
 		exit_with_error("Invalid file format");
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		exit_with_error("No such file or directory");
-	parse_textures(fd, cub);
-	// parse_colors(fd, cub);
-	populate_map(fd, cub);
+	init_empty_map(cub);
+	while (1)
+	{
+		new_line = get_next_line(fd);
+		if (!new_line)
+			break ;
+		if (new_line && new_line[0] != '1' && new_line[0] != ' ')
+		{
+			parse_textures(new_line, cub);
+		}
+		if (new_line && (new_line[0] == '1' || new_line[0] == ' '))
+			populate_map(new_line, cub, &i);
+	}
+	// for testing purposes
+	// for (int i = 0; i < cub->map_height; i++)
+	// {
+	// 	printf("%s\n", cub->map[i]);
+	// }
+	// printf("Floor color: %d\n", cub->textures.floor_color);
+	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
+	// for (int j = 0; cub->txtr; j++)
+	// {
+	// 	printf("Orientation: %s\n", cub->txtr->orientation);
+	// 	printf("Path: %s\n", cub->txtr->path);
+	// 	cub->txtr = cub->txtr->next;
+	// }
 	close(fd);
 }
+

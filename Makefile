@@ -1,5 +1,5 @@
 NAME = cub3d
-CC = cc
+CC = cc -g
 CFLAGS = -Wall -Wextra -Werror -fPIC
 INCLUDES = -I includes -I libft -I mlx
 SRC = $(wildcard src/*.c)

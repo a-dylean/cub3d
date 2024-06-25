@@ -63,12 +63,11 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 	{
 		init_struct(&cub, argv[1]);
-		// parse_input(argv[1], &cub);
+		parse_input(argv[1], &cub);
 		cub.mlx_ptr = mlx_init();
 		if (!cub.mlx_ptr)
 			return (1);
-		cub.win_ptr = mlx_new_window(cub.mlx_ptr, 800, 600, "cub3d");
-			// replace 800 and 600 with the calculated win height and length
+		cub.win_ptr = mlx_new_window(cub.mlx_ptr, 800, 600, "cub3d"); // replace 800 and 600 with the calculated win height and length
 		if (!cub.win_ptr)
 			return (free(cub.mlx_ptr), 1);
 		load_textures(&cub);
