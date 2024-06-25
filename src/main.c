@@ -6,6 +6,7 @@ void init_cube(char *filename, t_cub *cub)
 	cub->map = NULL;
 	cub->map_height = get_map_height(filename);
 	cub->map_width = 0;
+	cub->textures = NULL;
 }
 
 int	main(int argc, char **argv)
@@ -20,5 +21,6 @@ int	main(int argc, char **argv)
 	else
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
 	free_map(cub.map);
+	// free_txtr(cub.textures);
 	return (0);
 }

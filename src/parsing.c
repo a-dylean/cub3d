@@ -76,27 +76,46 @@ void	populate_map(int fd, t_cub *cub)
 	}
 }
 
+void create_texture(t_cub *cub, char *line)
+{
+	char *orientation;
+	char *path;
+
+	orientation = ft_split(line, ' ')[0];
+	path = ft_split(line, ' ')[1];
+	add_txtr_back(&cub->textures, new_txtr(orientation, path));
+	free(orientation);
+	free(path);
+}
+
 void	parse_textures(int fd, t_cub *cub)
 {
 	char	*new_line;
 
-	(void)cub;
 	while (1)
 	{
 		new_line = get_next_line(fd);
 		if (!new_line)
 			break ;
 		if (new_line[0] == 'N' && new_line[1] == 'O')
-			printf("NO\n");
+		{
+			create_texture(cub, new_line);
+		}
 		else if (new_line[0] == 'S' && new_line[1] == 'O')
-			printf("SO\n");
+			create_texture(cub, new_line);
 		else if (new_line[0] == 'W' && new_line[1] == 'E')
-			printf("WE\n");
+			create_texture(cub, new_line);
 		else if (new_line[0] == 'E' && new_line[1] == 'A')
-			printf("EA\n");
+			create_texture(cub, new_line);
 		else if (new_line[0] == 'S' && new_line[1] == ' ')
-			printf("S\n");
+			create_texture(cub, new_line);
 		free(new_line);
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		printf("Orientation[%d]: %s\n", i, cub->textures->orientation);
+		printf("Path[%d]: %s\n", i, cub->textures->path);
+		cub->textures = cub->textures->next;
 	}
 }
 
