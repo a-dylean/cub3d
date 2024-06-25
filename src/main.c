@@ -26,13 +26,15 @@ void	init_struct(t_cub *cub)
 	cub->textures.img_ptr_south = NULL;
 	cub->textures.img_ptr_east = NULL;
 	cub->textures.img_ptr_west = NULL;
+	cub->textures.floor_color = 0xDC6400;
+	cub->textures.ceiling_color = 0xE11E00;
 }
 
-int	load_textures(t_cub *cub)
+int	load_textures(t_cub *cub)	// replace the textures with the correct paths, after parsing
 {
 	cub->textures.img_ptr_north = mlx_xpm_file_to_image(cub->mlx_ptr, "assets/Walls/light_brick.xpm", &cub->win_width, &cub->win_height);
 	if (!cub->textures.img_ptr_north)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
+		return (free(cub->mlx_ptr), free(cub->win_ptr), 1); // implement proper freeing of all the previous allocations for images in case of error + exit program
 	cub->textures.img_ptr_south = mlx_xpm_file_to_image(cub->mlx_ptr, "assets/Walls/diamond.xpm", &cub->win_width, &cub->win_height);
 	if (!cub->textures.img_ptr_south)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
