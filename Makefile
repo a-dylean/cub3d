@@ -1,27 +1,21 @@
 NAME = cub3d
-
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -fPIC
-
-INCLUDES = -I includes -Ilibft -Imlx
-
-SRC = 	src/main.c\
-
-OBJ_DIR = obj
-OBJ := $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRC))
-
+INCLUDES = -I includes -I libft -I mlx
+SRC = src/main.c
+OBJ = $(SRC:.c=.o)
 LIBFT = libft/libft.a
+
 MLX_DIR = mlx
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX_FLAGS = -L $(MLX_DIR) -lmlx -L/usr/lib/X11 -lXext -lX11
 
 all: $(NAME)
 
-$(OBJ_DIR)/%.o: src/%.c
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+.c.o:
+	$(CC) $(CFLAGS) -c -o $@ $< $(INCLUDES)
 
-$(NAME): $(LIBFT) $(OBJ)
+$(NAME): $(LIBFT) $(MLX_LIB) $(OBJ)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJ) -L libft -lft $(MLX_FLAGS)
 
 $(LIBFT):
@@ -33,7 +27,7 @@ $(MLX_LIB):
 clean:
 	make clean -C libft
 	make clean -C $(MLX_DIR)
-	rm -rf $(OBJ_DIR)
+	rm -f $(OBJ)
 
 fclean: clean
 	make fclean -C libft
