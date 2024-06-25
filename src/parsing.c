@@ -83,7 +83,7 @@ void create_texture(t_cub *cub, char *line)
 
 	orientation = ft_split(line, ' ')[0];
 	path = ft_split(line, ' ')[1];
-	add_txtr_back(&cub->textures, new_txtr(orientation, path));
+	add_txtr_back(&cub->txtr, new_txtr(orientation, path));
 	free(orientation);
 	free(path);
 }
@@ -113,9 +113,9 @@ void	parse_textures(int fd, t_cub *cub)
 	}
 	for (int i = 0; i < 5; i++)
 	{
-		printf("Orientation[%d]: %s\n", i, cub->textures->orientation);
-		printf("Path[%d]: %s\n", i, cub->textures->path);
-		cub->textures = cub->textures->next;
+		printf("Orientation[%d]: %s\n", i, cub->txtr->orientation);
+		printf("Path[%d]: %s\n", i, cub->txtr->path);
+		cub->txtr = cub->txtr->next;
 	}
 }
 
