@@ -13,6 +13,26 @@ int	key_press(int keycode, t_cub *cub)
 {
 	if (keycode == XK_Escape)
 		destroyer(cub);
+	else if (keycode == XK_w)
+	{
+		if (cub->map[(int)(cub->player.y - 1)][(int)(cub->player.x)] == '0')
+			cub->player.y -= 1;
+	}
+	else if (keycode == XK_s)
+	{
+		if (cub->map[(int)(cub->player.y + 1)][(int)(cub->player.x)] == '0')
+			cub->player.y += 1;
+	}
+	else if (keycode == XK_a)
+	{
+		if (cub->map[(int)(cub->player.y)][(int)(cub->player.x - 1)] == '0')
+			cub->player.x -= 1;
+	}
+	else if (keycode == XK_d)
+	{
+		if (cub->map[(int)(cub->player.y)][(int)(cub->player.x + 1)] == '0')
+			cub->player.x += 1;
+	}
 	return (0);
 }
 
@@ -78,8 +98,8 @@ int	main(int argc, char **argv)
 		if (!cub.win_ptr)
 			return (free(cub.mlx_ptr), 1);
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
-		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
-		mlx_hook(cub.win_ptr, KeyRelease, KeyReleaseMask, &key_press, &cub);
+		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub); // handle ESC as well
+		mlx_hook(cub.win_ptr, KeyRelease, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}
 	else

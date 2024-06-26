@@ -20,6 +20,7 @@ void	draw_vertical_line(t_cub *cub, int x, int y1, int y2, int color)
 		y++;
 	}
 }
+
 /*Gets the x coordinates of the camera + calculates the
 ray position and direction, then saves which 'box' of
 the map we are in, then get the len of ray from one x
@@ -34,6 +35,7 @@ void	populate_ray_struct(t_ray *ray, t_player *player, int x)
 	ray->delta_dist_x = fabs(1 / ray->dir_x);
 	ray->delta_dist_y = fabs(1 / ray->dir_y);
 }
+
 /*Calculate distance projected on camera direction (Euclidean distance
 will give fisheye effect!)*/
 int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
@@ -44,6 +46,7 @@ int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
 		ray->perp_wall_dist = (ray->map_y - player->y + (1 - ray->step_y) / 2) / ray->dir_y;
 	return (east_west);
 }
+
 /*Digital Differential Analyzer - draws a straight line between 2 given 
 points and finds the closest wall that a ray intersects*/
 int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
@@ -71,6 +74,7 @@ int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 	}
 	return (calculate_distance_to_wall(ray, &cub->player, hit_east_west));
 }
+
 /*calculates the initial step direction and distance to
 the first side (vertical or horizontal) that the ray will intersect*/
 void	get_step_and_distance_to_side(t_ray *ray, t_player *player)
@@ -119,12 +123,12 @@ int	get_wall_texture(t_ray *ray, int side)
 		if (ray->dir_x < 0)
 			return RED; // West wall
 		else
-			return GREEN; // East wall
+			return BLUE; // East wall
 	}
 	else // EW wall
 	{
 		if (ray->dir_y < 0)
-			return BLUE; // North wall
+			return GREEN; // North wall
 		else
 			return WHITE; // South wall
 	}

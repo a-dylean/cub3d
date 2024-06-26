@@ -16,7 +16,8 @@
 
 #define WIDTH 1920
 #define HEIGHT 1080
-
+#define TEXTURE_HEIGHT 64
+#define TEXTURE_WIDTH 64
 #define RED 0x00FF0000
 #define GREEN 0x0000FF00
 #define BLUE 0x000000FF
