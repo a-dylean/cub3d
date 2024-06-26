@@ -1,4 +1,4 @@
-NAME = cub3d
+NAME = cub3D
 CC = cc -g
 CFLAGS = -Wall -Wextra -Werror -fPIC
 INCLUDES = -I includes -I libft -I mlx

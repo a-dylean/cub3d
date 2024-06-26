@@ -25,6 +25,7 @@ void	free_and_exit(char *msg, t_cub *cub, char *new_line)
 
 void	exit_with_error(char *error)
 {
+	// add freeing of all the allocated memory?
 	printf("Error\n");
 	printf("%s\n", error);
 	exit(1);

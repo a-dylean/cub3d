@@ -13,6 +13,8 @@
 # define WIDTH 1280
 # define HEIGHT 720
 
+# define SPACES " \t\n\v\f\r"
+
 /* Structures */
 
 typedef struct s_player // everything is declared as double, math functions take them as parameters

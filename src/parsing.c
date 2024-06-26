@@ -93,21 +93,57 @@ int str_to_color(char *str)
 	}
 	return (color);
 }
+char *get_id(char *line)
+{
+	char **nodes;
+
+	nodes = ft_split(line, ' ');
+	if (!nodes)
+		return (NULL);
+	if (is_texure(nodes[0]))
+		return (nodes[0]);
+	return (NULL);
+}
+
+char *get_path(char *line)
+{
+	char **nodes;
+	int fd;
+
+	nodes = ft_split(line, ' ');
+	if (!nodes)
+		return (NULL);
+	fd = open(nodes[1], O_RDONLY);
+	if (fd >= 0)
+		return (nodes[1]);
+	return (NULL);
+}
 
 void	parse_info(char *line, t_cub *cub)
 {
-	char	*space_pos;
 	char	*id;
-	char	*value;
+	char	*path;
+	char *trimmed_line;
 
-	line = trim_spaces(line);
-	space_pos = ft_strchr(line, ' ');
-	if (!space_pos)
+	if (!line || line[0] == '\n')
 		return ;
-	id = ft_strndup(line, space_pos - line);
-	value = trim_spaces(space_pos + 1);
+	trimmed_line = ft_strtrim(line, SPACES);
+	if (!trimmed_line)
+		exit_with_error("Memory allocation failed");
+	id = get_id(trimmed_line);
+	if (!id)
+	{
+		free(trimmed_line);
+		exit_with_error("Invalid identifier");
+	}
+	path = get_path(trimmed_line);
+	if (!path)
+	{
+		free(trimmed_line);
+		exit_with_error("Invalid path");
+	}
 	if (is_texure(id))
-		add_txtr_back(&cub->txtr, new_txtr(id, value));
+		add_txtr_back(&cub->txtr, new_txtr(id, path));
 	if (is_color(id))
 	{
 		printf("color is found\n");
@@ -138,7 +174,7 @@ void	parse_input(char *path, t_cub *cub)
 		new_line = get_next_line(fd);
 		if (!new_line)
 			break ;
-		if (new_line && new_line[0] != '1' && new_line[0] != ' ')
+		if (new_line)
 		{
 			parse_info(new_line, cub);
 		}
@@ -159,5 +195,6 @@ void	parse_input(char *path, t_cub *cub)
 		printf("Path: %s\n", current->path);
 		current = current->next;
 	}
+	// free(new_line);
 	close(fd);
 }
