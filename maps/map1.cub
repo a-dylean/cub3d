@@ -1,15 +1,10 @@
 NO assets/Walls/diamond.xpm
-
-   C 225,  30,  0 
-
-   SO assets/Walls/emerald.xpm
+SO assets/Walls/emerald.xpm
 WE assets/Walls/light_brick.xpm
-F  220   ,    100,45
 EA assets/Walls/light_gravel.xpm
 
-
-
-
+F 220,100,0
+C 225,30,0
 
         1111111111111111111111111
         1000000000110000000000001
