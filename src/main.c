@@ -36,8 +36,8 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->player.dir_y = 0;
 	cub->player.plane_x = 0;
 	cub->player.plane_y = 0;
-	cub->textures.floor_color = 0xDC6400;
-	cub->textures.ceiling_color = 0xE11E00;
+	cub->textures.floor_color = YELLOW; // change to real colors taken from map parsing
+	cub->textures.ceiling_color = WHITE;
 }
 
 int	load_textures(t_cub *cub) // replace the textures with the correct paths, after parsing
