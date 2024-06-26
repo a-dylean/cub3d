@@ -59,15 +59,18 @@ void	populate_map(char *line, t_cub *cub, int *i)
 	(*i)++;
 }
 
-int is_texure(char *id)
+int is_texture(char *id)
 {
-	printf("id: %s\n", id);
+	if (!id)
+		return (0);
 	return (ft_strncmp(id, "NO", 3) == 0 || ft_strncmp(id, "SO", 3) == 0
 		|| ft_strncmp(id, "WE", 3) == 0 || ft_strncmp(id, "EA", 3) == 0);
 }
 
 int is_color(char *id)
 {
+	if (!id)
+		return (0);	
 	return (ft_strcmp(id, "F") == 0 || ft_strcmp(id, "C") == 0);
 }
 
@@ -80,8 +83,6 @@ int str_to_color(char *str)
 	i = 0;
 	color = 0;
 	printf("str: %s\n", str);
-	// str = trim_spaces(str);
-	// printf("str: %s\n", str);
 	char **split = ft_split(str, ',');
 	while (split[i])
 	{
@@ -93,66 +94,62 @@ int str_to_color(char *str)
 	}
 	return (color);
 }
-char *get_id(char *line)
-{
-	char **nodes;
 
-	nodes = ft_split(line, ' ');
-	if (!nodes)
-		return (NULL);
-	if (is_texure(nodes[0]))
-		return (nodes[0]);
-	return (NULL);
-}
+void parse_color(char **nodes, t_cub *cub)
+{
+	(void)cub;
+	char	*id = NULL;
+	char	*value = NULL;
+	if (array_len(nodes) != 2)
+	{
+		free_array(nodes);
+		exit_with_error("Invalid color declaration");
+	}
+	printf("Found color!\n");
+	// id = line[0];
+	// value = ft_strtrim(line + 1, SPACES);
+	// if (!value)
+	// {
+	// 	free(line);
+	// 	exit_with_error("Invalid color value");
+	// }
+	// if (ft_strncmp(id, "F", 1) == 0)
+	// 	cub->textures.floor_color = str_to_color(value);
+	// if (ft_strncmp(id, "C", 1) == 0)
+	// 	cub->textures.ceiling_color = str_to_color(value);
+
+	free(id);
+	free(value);
+}	
 
 char *get_path(char *line)
 {
-	char **nodes;
 	int fd;
 
-	nodes = ft_split(line, ' ');
-	if (!nodes)
-		return (NULL);
-	fd = open(nodes[1], O_RDONLY);
+	fd = open(line, O_RDONLY);
 	if (fd >= 0)
-		return (nodes[1]);
+		return (line);
 	return (NULL);
 }
 
-void	parse_info(char *line, t_cub *cub)
+void	parse_texture(char **nodes, t_cub *cub)
 {
 	char	*id;
 	char	*path;
-	char *trimmed_line;
 
-	if (!line || line[0] == '\n')
-		return ;
-	trimmed_line = ft_strtrim(line, SPACES);
-	if (!trimmed_line)
-		exit_with_error("Memory allocation failed");
-	id = get_id(trimmed_line);
-	if (!id)
+	if (array_len(nodes) != 2)
 	{
-		free(trimmed_line);
-		exit_with_error("Invalid identifier");
+		free_array(nodes);
+		exit_with_error("Invalid texture declaration");
 	}
-	path = get_path(trimmed_line);
+	id = nodes[0];
+	path = get_path(nodes[1]);
 	if (!path)
 	{
-		free(trimmed_line);
+		free_array(nodes);
 		exit_with_error("Invalid path");
 	}
-	if (is_texure(id))
-		add_txtr_back(&cub->txtr, new_txtr(id, path));
-	if (is_color(id))
-	{
-		printf("color is found\n");
-		// if (ft_strncmp(id, "F", 1) == 0)
-		// 	cub->textures.floor_color = str_to_color("220,100,0");
-		// if (ft_strncmp(id, "C", 1) == 0)
-		// 	cub->textures.ceiling_color = ft_atoi_base(value, "0123456789ABCDEF");
-	}
-	
+	add_txtr_back(&cub->txtr, new_txtr(id, path));
 	free(id);
 }
 
@@ -160,6 +157,8 @@ void	parse_input(char *path, t_cub *cub)
 {
 	int		fd;
 	char	*new_line;
+	char *trimmed_line;
+	char **nodes;
 	int		i;
 
 	i = 0;
@@ -174,17 +173,23 @@ void	parse_input(char *path, t_cub *cub)
 		new_line = get_next_line(fd);
 		if (!new_line)
 			break ;
-		if (new_line)
-		{
-			parse_info(new_line, cub);
-		}
-		if (new_line && (new_line[0] == '1' || new_line[0] == ' '))
+		trimmed_line = ft_strtrim(new_line, SPACES);
+		if (!trimmed_line)
+			continue;
+		nodes = ft_split(trimmed_line, ' ');	
+		if (!nodes)
+			free_and_exit("Memory allocation failed", cub, new_line);
+		if (trimmed_line && is_texture(nodes[0]))
+			parse_texture(nodes, cub);
+		if (trimmed_line && is_color(nodes[0]))
+			parse_color(nodes, cub);
+		if (trimmed_line && (trimmed_line[0] == '1' || trimmed_line[0] == ' '))
 			populate_map(new_line, cub, &i);
 	}
 	// for testing purposes
 	// for (int i = 0; i < cub->map_height; i++)
 	// {
-	// 	printf("%s\n", cub->map[i]);
+	// 	printf("line[%d]: %s\n", i, cub->map[i]);
 	// }
 	// printf("Floor color: %d\n", cub->textures.floor_color);
 	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);

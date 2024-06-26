@@ -78,6 +78,7 @@ int					valid_format(char *filename);
 void				free_map(char **map);
 int					get_map_height(char *filename);
 int					array_len(char **array);
+void free_array(char **str);
 
 /* Textures */
 void	add_txtr_back(t_txtr **tokens, t_txtr *new_node);
