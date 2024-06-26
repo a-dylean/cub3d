@@ -11,9 +11,20 @@
 # include <X11/keysym.h>
 # include <X11/X.h>
 # include <mlx.h>
+# include <math.h>
+# include <stdbool.h>
 
-#define WIDTH 1280
-#define HEIGHT 720
+#define WIDTH 1920
+#define HEIGHT 1080
+#define COLOR_NORTH 0x00FF0000 // RED
+#define COLOR_SOUTH 0x0000FF00 // GREEN
+#define COLOR_EAST 0x000000FF // BLUE
+#define COLOR_WEST 0x00FFFFFF // WHITE
+#define RED 0x00FF0000
+#define GREEN 0x0000FF00
+#define BLUE 0x000000FF
+#define WHITE 0x00FFFFFF
+#define YELLOW 0x00FFFF00
 
 /* Structures */
 
@@ -82,4 +93,7 @@ int					get_map_height(char *filename);
 /* Textures */
 void				add_txtr_back(t_txtr **txtr, t_txtr *new);
 t_txtr				*new_txtr(char *orientation, char *path);
+
+/* Raycasting */
+int 				cast_ray(t_cub *cub);
 #endif
