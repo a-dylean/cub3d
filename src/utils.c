@@ -51,19 +51,6 @@ int	array_len(char **array)
 	return (i);
 }
 
-char	*trim_spaces(char *str)
-{
-	while (ft_isspace((unsigned char)*str))
-		str++;
-	if (*str == 0)
-		return (str);
-	char *end = str + strlen(str) - 1;
-	while (end > str && ft_isspace((unsigned char)*end))
-		end--;
-	*(end + 1) = 0;
-	return (str);
-}
-
 void free_array(char **str)
 {
 	int i;

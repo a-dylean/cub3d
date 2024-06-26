@@ -81,7 +81,15 @@ int					array_len(char **array);
 void free_array(char **str);
 
 /* Textures */
+int is_texture(char *id);
+char *get_path(char *line);
+void parse_texture(char **nodes, t_cub *cub);
 void	add_txtr_back(t_txtr **tokens, t_txtr *new_node);
 t_txtr				*new_txtr(char *orientation, char *path);
-char	*trim_spaces(char *str);
+
+/* Colors */
+int is_color(char *id);
+void parse_color(char **nodes, t_cub *cub);
+int str_to_color(char *str);
+
 #endif
