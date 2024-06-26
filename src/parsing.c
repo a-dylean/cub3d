@@ -115,11 +115,12 @@ void	parse_input(char *path, t_cub *cub)
 		if (new_line && (new_line[0] == '1' || new_line[0] == ' '))
 			populate_map(new_line, cub, &i);
 	}
-	// for testing purposes
+	//for testing purposes
 	// for (int i = 0; i < cub->map_height; i++)
 	// {
-	// 	printf("%s\n", cub->map[i]);
+	// 	printf("%s", cub->map[i]);
 	// }
+	// printf("\n");
 	// printf("Floor color: %d\n", cub->textures.floor_color);
 	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
 	// for (int j = 0; cub->txtr; j++)

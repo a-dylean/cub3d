@@ -30,6 +30,12 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->textures.img_ptr_south = NULL;
 	cub->textures.img_ptr_east = NULL;
 	cub->textures.img_ptr_west = NULL;
+	cub->player.x = 0;
+	cub->player.y = 0;
+	cub->player.dir_x = 0;
+	cub->player.dir_y = 0;
+	cub->player.plane_x = 0;
+	cub->player.plane_y = 0;
 	cub->textures.floor_color = 0xDC6400;
 	cub->textures.ceiling_color = 0xE11E00;
 }
@@ -64,6 +70,7 @@ int	main(int argc, char **argv)
 	{
 		init_struct(&cub, argv[1]);
 		parse_input(argv[1], &cub);
+		set_player(&cub, &cub.player);
 		cub.mlx_ptr = mlx_init();
 		if (!cub.mlx_ptr)
 			return (1);

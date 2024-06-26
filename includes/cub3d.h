@@ -69,6 +69,7 @@ typedef struct s_cub
 /* Parsing */
 
 void				parse_input(char *path, t_cub *cub);
+void				set_player(t_cub *cub, t_player *player);
 
 /* Utils */
 
