@@ -54,7 +54,7 @@ char	*trim_spaces(char *str)
 {
 	while (ft_isspace((unsigned char)*str))
 		str++;
-	if (*str == 0) // All spaces?
+	if (*str == 0)
 		return (str);
 	char *end = str + strlen(str) - 1;
 	while (end > str && ft_isspace((unsigned char)*end))

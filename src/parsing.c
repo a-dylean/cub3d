@@ -26,8 +26,7 @@ int	get_map_height(char *filename)
 		if (new_line)
 			free(new_line);
 	}
-	close(fd);
-	return (height);
+	return (close(fd), height);
 }
 
 static void	init_empty_map(t_cub *cub)
@@ -60,24 +59,74 @@ void	populate_map(char *line, t_cub *cub, int *i)
 	(*i)++;
 }
 
-void parse_info(char *line, t_cub *cub) 
+int is_texure(char *id)
 {
-    line = trim_spaces(line);
-    char *space_pos = strchr(line, ' ');
-    if (!space_pos) return; 
+	printf("id: %s\n", id);
+	return (ft_strncmp(id, "NO", 3) == 0 || ft_strncmp(id, "SO", 3) == 0
+		|| ft_strncmp(id, "WE", 3) == 0 || ft_strncmp(id, "EA", 3) == 0);
+}
 
-    char *id = strndup(line, space_pos - line);
-    char *value = trim_spaces(space_pos + 1); 
-	add_txtr_back(&cub->txtr, new_txtr(id, value));
-    free(id);
+int is_color(char *id)
+{
+	return (ft_strcmp(id, "F") == 0 || ft_strcmp(id, "C") == 0);
+}
+
+int str_to_color(char *str)
+{
+	int	i;
+	static int	color;
+	int	tmp;
+
+	i = 0;
+	color = 0;
+	printf("str: %s\n", str);
+	// str = trim_spaces(str);
+	// printf("str: %s\n", str);
+	char **split = ft_split(str, ',');
+	while (split[i])
+	{
+		tmp = ft_atoi(split[i]);
+		if (tmp < 0 || tmp > 255)
+			return (-1);
+		color = color | (tmp << (16 - (i++ * 8)));
+		i++;
+	}
+	return (color);
+}
+
+void	parse_info(char *line, t_cub *cub)
+{
+	char	*space_pos;
+	char	*id;
+	char	*value;
+
+	line = trim_spaces(line);
+	space_pos = ft_strchr(line, ' ');
+	if (!space_pos)
+		return ;
+	id = ft_strndup(line, space_pos - line);
+	value = trim_spaces(space_pos + 1);
+	if (is_texure(id))
+		add_txtr_back(&cub->txtr, new_txtr(id, value));
+	if (is_color(id))
+	{
+		printf("color is found\n");
+		// if (ft_strncmp(id, "F", 1) == 0)
+		// 	cub->textures.floor_color = str_to_color("220,100,0");
+		// if (ft_strncmp(id, "C", 1) == 0)
+		// 	cub->textures.ceiling_color = ft_atoi_base(value, "0123456789ABCDEF");
+	}
+	
+	free(id);
 }
 
 void	parse_input(char *path, t_cub *cub)
 {
-	int fd;
-	char *new_line;
-	int i = 0;
+	int		fd;
+	char	*new_line;
+	int		i;
 
+	i = 0;
 	if (!valid_format(path))
 		exit_with_error("Invalid file format");
 	fd = open(path, O_RDONLY);
@@ -103,14 +152,12 @@ void	parse_input(char *path, t_cub *cub)
 	// }
 	// printf("Floor color: %d\n", cub->textures.floor_color);
 	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
-	// t_txtr *current = cub->txtr;
-	// while (current)
-	// {
-	// 	printf("Orientation: %s\n", current->orientation);
-	// 	printf("Path: %s\n", current->path);
-	// 	current = current->next;
-	// }
-	
+	t_txtr *current = cub->txtr;
+	while (current)
+	{
+		printf("Orientation: %s\n", current->orientation);
+		printf("Path: %s\n", current->path);
+		current = current->next;
+	}
 	close(fd);
 }
-
