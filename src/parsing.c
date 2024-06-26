@@ -32,10 +32,8 @@ int	get_map_height(char *filename)
 static void	init_empty_map(t_cub *cub)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
 	cub->map = malloc(sizeof(char *) * (cub->map_height + 1));
 	if (!cub->map)
 	{
@@ -95,7 +93,7 @@ void	parse_input(char *path, t_cub *cub)
 	// free(new_line);
 	close(fd);
 	textures_errors_check(cub);
-	// colors_errors_check(cub); -> returning error if no colors found or if there are duplicates or if there aren't 2 colors 
+	colors_errors_check(cub);
 	printf("Floor color: %d\n", cub->textures.floor_color);
 	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
 }

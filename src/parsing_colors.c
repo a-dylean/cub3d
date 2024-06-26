@@ -13,18 +13,39 @@ int get_rgb_int(char **colors)
 	int i;
 
 	i = 0;
-	//change this condition
-	while (i < 3)
+	while (colors[i] != NULL)
 	{
+		if (ft_strchr(colors[i], ' ') || str_is_numeric(colors[i]))
+			return (-1);
 		int_colors[i] = ft_atoi(colors[i]);
 		if (int_colors[i] < 0 || int_colors[i] > 255)
-		{
-			free_array(colors);
-			exit_with_error("Invalid color value");
-		}
+			return (-1);
 		i++;
 	}
 	return ((int_colors[0] << 16) | (int_colors[1] << 8) | int_colors[2]);
+}
+
+void set_color_value(char *line, char **colors, char **nodes, t_cub *cub)
+{
+	if ((cub->textures.ceiling_color > 0 && line[0] == 'C')||(cub->textures.floor_color > 0 && line[0] == 'F'))
+		exit_with_error("Duplicate color definitions found");
+	int color;
+
+	color = get_rgb_int(colors);
+	if (color == -1)
+	{
+		free_array(nodes);
+		exit_with_error("Invalid color value");
+	}
+	if (line[0] == 'F')
+		cub->textures.floor_color = color;
+	else if (line[0] == 'C')
+		cub->textures.ceiling_color = color;
+	else
+	{
+		free_array(nodes);
+		exit_with_error("Invalid color identifier");
+	}
 }
 
 void parse_color(char *line, t_cub *cub)
@@ -35,6 +56,7 @@ void parse_color(char *line, t_cub *cub)
 	int i;
 
 	i = 0;
+	printf("LINE: %s\n", line);
 	temp = ft_strtrim(line, "FC");
 	nodes = ft_split(temp, ',');
 	if (!nodes)
@@ -44,7 +66,9 @@ void parse_color(char *line, t_cub *cub)
 		free_array(nodes);
 		exit_with_error("Invalid color declaration");
 	}
-	colors = malloc(sizeof(char *) * 3);
+	colors = malloc(sizeof(char *) * array_len(nodes) + 1);
+	if (!colors)
+		exit_with_error("Memory allocation failed");
 	while (nodes[i])
 	{
 		temp = ft_strtrim(nodes[i], SPACES);
@@ -57,14 +81,10 @@ void parse_color(char *line, t_cub *cub)
 		free(temp);
 		i++;
 	}
-	if (line[0] == 'F')
-		cub->textures.floor_color = get_rgb_int(colors);
-	else if (line[0] == 'C')
-		cub->textures.ceiling_color = get_rgb_int(colors);
-	else
-	{
-		free_array(nodes);
-		exit_with_error("Invalid color identifier");
-	}
+	set_color_value(line, colors, nodes, cub);
 }
-
+void colors_errors_check(t_cub *cub)
+{
+	(void)cub;
+	return;
+}

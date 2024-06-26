@@ -81,6 +81,7 @@ int					array_len(char **array);
 void free_array(char **str);
 int list_len(t_txtr *list);
 int has_duplicates(t_txtr *list);
+int str_is_numeric(char *str);
 
 /* Textures */
 int is_texture(char *id);
@@ -93,6 +94,6 @@ void textures_errors_check(t_cub *cub);
 /* Colors */
 int is_color(char *id);
 void parse_color(char *line, t_cub *cub);
-int str_to_color(char *str);
+void colors_errors_check(t_cub *cub);
 
 #endif

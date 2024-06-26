@@ -30,8 +30,8 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->textures.img_ptr_south = NULL;
 	cub->textures.img_ptr_east = NULL;
 	cub->textures.img_ptr_west = NULL;
-	cub->textures.floor_color = 0xDC6400;
-	cub->textures.ceiling_color = 0xE11E00;
+	cub->textures.floor_color = 0;
+	cub->textures.ceiling_color = 0;
 }
 
 int	load_textures(t_cub *cub) // replace the textures with the correct paths, after parsing
