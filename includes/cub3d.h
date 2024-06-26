@@ -79,6 +79,8 @@ void				free_map(char **map);
 int					get_map_height(char *filename);
 int					array_len(char **array);
 void free_array(char **str);
+int list_len(t_txtr *list);
+int has_duplicates(t_txtr *list);
 
 /* Textures */
 int is_texture(char *id);
@@ -86,6 +88,7 @@ char *get_path(char *line);
 void parse_texture(char **nodes, t_cub *cub);
 void	add_txtr_back(t_txtr **tokens, t_txtr *new_node);
 t_txtr				*new_txtr(char *orientation, char *path);
+void textures_errors_check(t_cub *cub);
 
 /* Colors */
 int is_color(char *id);

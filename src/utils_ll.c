@@ -40,3 +40,38 @@ void	add_txtr_back(t_txtr **tokens, t_txtr *new_node)
 		current->next = new_node;
 	}
 }
+
+int list_len(t_txtr *list)
+{
+	int i;
+	t_txtr *tmp;
+
+	i = 0;
+	tmp = list;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+int has_duplicates(t_txtr *list)
+{
+	t_txtr *tmp;
+	t_txtr *tmp2;
+
+	tmp = list;
+	while (tmp)
+	{
+		tmp2 = tmp->next;
+		while (tmp2)
+		{
+			if (ft_strncmp(tmp->orientation, tmp2->orientation, 3) == 0)
+				return (1);
+			tmp2 = tmp2->next;
+		}
+		tmp = tmp->next;
+	}
+	return (0);
+}

@@ -38,3 +38,13 @@ void	parse_texture(char **nodes, t_cub *cub)
 	add_txtr_back(&cub->txtr, new_txtr(id, path));
 	free(id);
 }
+
+void textures_errors_check(t_cub *cub)
+{
+	if (!cub->txtr)
+		exit_with_error("No textures found");
+	if (list_len(cub->txtr) != 4)
+		exit_with_error("Invalid number of textures");
+	if (has_duplicates(cub->txtr))
+		exit_with_error("Duplicate textures found");
+}

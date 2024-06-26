@@ -58,13 +58,13 @@ void	populate_map(char *line, t_cub *cub, int *i)
 	free(line);
 	(*i)++;
 }
-	
+
 void	parse_input(char *path, t_cub *cub)
 {
 	int		fd;
 	char	*new_line;
-	char *trimmed_line;
-	char **nodes;
+	char	*trimmed_line;
+	char	**nodes;
 	int		i;
 
 	i = 0;
@@ -81,8 +81,8 @@ void	parse_input(char *path, t_cub *cub)
 			break ;
 		trimmed_line = ft_strtrim(new_line, SPACES);
 		if (!trimmed_line)
-			continue;
-		nodes = ft_split(trimmed_line, ' ');	
+			continue ;
+		nodes = ft_split(trimmed_line, ' ');
 		if (!nodes)
 			free_and_exit("Memory allocation failed", cub, new_line);
 		if (trimmed_line && is_texture(nodes[0]))
@@ -92,20 +92,8 @@ void	parse_input(char *path, t_cub *cub)
 		if (trimmed_line && (trimmed_line[0] == '1' || trimmed_line[0] == ' '))
 			populate_map(new_line, cub, &i);
 	}
-	// for testing purposes
-	// for (int i = 0; i < cub->map_height; i++)
-	// {
-	// 	printf("line[%d]: %s\n", i, cub->map[i]);
-	// }
-	// printf("Floor color: %d\n", cub->textures.floor_color);
-	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
-	t_txtr *current = cub->txtr;
-	while (current)
-	{
-		printf("Orientation: %s\n", current->orientation);
-		printf("Path: %s\n", current->path);
-		current = current->next;
-	}
 	// free(new_line);
 	close(fd);
+	textures_errors_check(cub);
+	// colors_errors_check(cub);
 }
