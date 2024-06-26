@@ -39,3 +39,26 @@ int	valid_format(char *filename)
 		return (0);
 	return (ft_strncmp(filename + len - 4, ".cub", ft_strlen(filename)) == 0);
 }
+
+int	array_len(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+		i++;
+	return (i);
+}
+
+char	*trim_spaces(char *str)
+{
+	while (ft_isspace((unsigned char)*str))
+		str++;
+	if (*str == 0) // All spaces?
+		return (str);
+	char *end = str + strlen(str) - 1;
+	while (end > str && ft_isspace((unsigned char)*end))
+		end--;
+	*(end + 1) = 0;
+	return (str);
+}

@@ -60,35 +60,16 @@ void	populate_map(char *line, t_cub *cub, int *i)
 	(*i)++;
 }
 
-void	create_texture(t_cub *cub, char *line)
+void parse_info(char *line, t_cub *cub) 
 {
-	char	*orientation;
-	char	*path;
+    line = trim_spaces(line);
+    char *space_pos = strchr(line, ' ');
+    if (!space_pos) return; 
 
-	orientation = ft_split(line, ' ')[0];
-	path = ft_split(line, ' ')[1];
-	add_txtr_back(&cub->txtr, new_txtr(orientation, path));
-	free(orientation);
-	free(path);
-}
-
-void	parse_textures(char *line, t_cub *cub)
-{
-	if (line[0] == 'N' && line[1] == 'O')
-		create_texture(cub, line);
-	else if (line[0] == 'S' && line[1] == 'O')
-		create_texture(cub, line);
-	else if (line[0] == 'W' && line[1] == 'E')
-		create_texture(cub, line);
-	else if (line[0] == 'E' && line[1] == 'A')
-		create_texture(cub, line);
-	else if (line[0] == 'S' && line[1] == ' ')
-		create_texture(cub, line);
-	else if (line[0] == 'F' && line[1] == ' ')
-		cub->textures.floor_color = ft_atoi(ft_split(line, ' ')[1]);
-	else if (line[0] == 'C' && line[1] == ' ')
-		cub->textures.ceiling_color = ft_atoi(ft_split(line, ' ')[1]);
-	// free(line);
+    char *id = strndup(line, space_pos - line);
+    char *value = trim_spaces(space_pos + 1); 
+	add_txtr_back(&cub->txtr, new_txtr(id, value));
+    free(id);
 }
 
 void	parse_input(char *path, t_cub *cub)
@@ -110,7 +91,7 @@ void	parse_input(char *path, t_cub *cub)
 			break ;
 		if (new_line && new_line[0] != '1' && new_line[0] != ' ')
 		{
-			parse_textures(new_line, cub);
+			parse_info(new_line, cub);
 		}
 		if (new_line && (new_line[0] == '1' || new_line[0] == ' '))
 			populate_map(new_line, cub, &i);
@@ -122,12 +103,14 @@ void	parse_input(char *path, t_cub *cub)
 	// }
 	// printf("Floor color: %d\n", cub->textures.floor_color);
 	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
-	// for (int j = 0; cub->txtr; j++)
+	// t_txtr *current = cub->txtr;
+	// while (current)
 	// {
-	// 	printf("Orientation: %s\n", cub->txtr->orientation);
-	// 	printf("Path: %s\n", cub->txtr->path);
-	// 	cub->txtr = cub->txtr->next;
+	// 	printf("Orientation: %s\n", current->orientation);
+	// 	printf("Path: %s\n", current->path);
+	// 	current = current->next;
 	// }
+	
 	close(fd);
 }
 
