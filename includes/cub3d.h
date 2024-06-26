@@ -112,4 +112,5 @@ t_txtr				*new_txtr(char *orientation, char *path);
 
 /* Raycasting */
 int 				cast_ray(t_cub *cub);
+
 #endif
