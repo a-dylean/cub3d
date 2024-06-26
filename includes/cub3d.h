@@ -25,6 +25,24 @@
 
 /* Structures */
 
+typedef struct s_ray
+{
+	double	camera_x;
+	double	dir_x;
+	double	dir_y;
+	int		map_x;
+	int		map_y;
+	double	side_dist_x; // Length of ray from current position to next x or y-side
+	double	side_dist_y;
+	double	delta_dist_x; // What direction to step in x or y-direction (either +1 or -1)
+	double	delta_dist_y;
+	double	perp_wall_dist;
+	int		step_x;
+	int		step_y;
+	int		draw_start;
+	int		draw_end;
+}	t_ray;
+
 typedef struct s_player // everything is declared as double, math functions take them as parameters
 {
 	double	x; 		/*initial x position*/
@@ -71,7 +89,8 @@ typedef struct s_cub
 	void			*win_ptr;
 	t_txtr			*txtr;
 	t_textures		textures;
-	t_player		player;	
+	t_player		player;
+	t_ray			ray;	
 }					t_cub;
 
 /* Parsing */
