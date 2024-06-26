@@ -88,12 +88,14 @@ void	parse_input(char *path, t_cub *cub)
 		if (trimmed_line && is_texture(nodes[0]))
 			parse_texture(nodes, cub);
 		if (trimmed_line && is_color(nodes[0]))
-			parse_color(nodes, cub);
+			parse_color(trimmed_line, cub);
 		if (trimmed_line && (trimmed_line[0] == '1' || trimmed_line[0] == ' '))
 			populate_map(new_line, cub, &i);
 	}
 	// free(new_line);
 	close(fd);
 	textures_errors_check(cub);
-	// colors_errors_check(cub);
+	// colors_errors_check(cub); -> returning error if no colors found or if there are duplicates or if there aren't 2 colors 
+	printf("Floor color: %d\n", cub->textures.floor_color);
+	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
 }

@@ -1,6 +1,5 @@
 #include "cub3d.h"
 
-
 int is_color(char *id)
 {
 	if (!id)
@@ -8,50 +7,64 @@ int is_color(char *id)
 	return (ft_strcmp(id, "F") == 0 || ft_strcmp(id, "C") == 0);
 }
 
-int str_to_color(char *str)
+int get_rgb_int(char **colors)
 {
-	int	i;
-	static int	color;
-	int	tmp;
+	int int_colors[3];
+	int i;
 
 	i = 0;
-	color = 0;
-	printf("str: %s\n", str);
-	char **split = ft_split(str, ',');
-	while (split[i])
+	//change this condition
+	while (i < 3)
 	{
-		tmp = ft_atoi(split[i]);
-		if (tmp < 0 || tmp > 255)
-			return (-1);
-		color = color | (tmp << (16 - (i++ * 8)));
+		int_colors[i] = ft_atoi(colors[i]);
+		if (int_colors[i] < 0 || int_colors[i] > 255)
+		{
+			free_array(colors);
+			exit_with_error("Invalid color value");
+		}
 		i++;
 	}
-	return (color);
+	return ((int_colors[0] << 16) | (int_colors[1] << 8) | int_colors[2]);
 }
 
-void parse_color(char **nodes, t_cub *cub)
+void parse_color(char *line, t_cub *cub)
 {
-	(void)cub;
-	char	*id = NULL;
-	char	*value = NULL;
-	if (array_len(nodes) != 2)
+	char **nodes;
+	char **colors;
+	char *temp;
+	int i;
+
+	i = 0;
+	temp = ft_strtrim(line, "FC");
+	nodes = ft_split(temp, ',');
+	if (!nodes)
+		exit_with_error("Memory allocation failed");
+	if (array_len(nodes) != 3)
 	{
 		free_array(nodes);
 		exit_with_error("Invalid color declaration");
 	}
-	printf("Found color!\n");
-	// id = line[0];
-	// value = ft_strtrim(line + 1, SPACES);
-	// if (!value)
-	// {
-	// 	free(line);
-	// 	exit_with_error("Invalid color value");
-	// }
-	// if (ft_strncmp(id, "F", 1) == 0)
-	// 	cub->textures.floor_color = str_to_color(value);
-	// if (ft_strncmp(id, "C", 1) == 0)
-	// 	cub->textures.ceiling_color = str_to_color(value);
-
-	free(id);
-	free(value);
+	colors = malloc(sizeof(char *) * 3);
+	while (nodes[i])
+	{
+		temp = ft_strtrim(nodes[i], SPACES);
+		colors[i] = ft_strdup(temp);
+		if (!colors[i])
+		{
+			free_array(nodes);
+			exit_with_error("Memory allocation failed");
+		}
+		free(temp);
+		i++;
+	}
+	if (line[0] == 'F')
+		cub->textures.floor_color = get_rgb_int(colors);
+	else if (line[0] == 'C')
+		cub->textures.ceiling_color = get_rgb_int(colors);
+	else
+	{
+		free_array(nodes);
+		exit_with_error("Invalid color identifier");
+	}
 }
+

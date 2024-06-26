@@ -92,7 +92,7 @@ void textures_errors_check(t_cub *cub);
 
 /* Colors */
 int is_color(char *id);
-void parse_color(char **nodes, t_cub *cub);
+void parse_color(char *line, t_cub *cub);
 int str_to_color(char *str);
 
 #endif
