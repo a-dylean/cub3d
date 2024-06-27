@@ -56,14 +56,28 @@ void	populate_map(char *line, t_cub *cub, int *i)
 	(*i)++;
 }
 
-void	parse_config(int fd, t_cub *cub)
+void	parse_textures_and_colors(char *new_line, char *trimmed_line,
+		t_cub *cub, char **nodes)
 {
-	char	*new_line;
-	char	*trimmed_line;
+	nodes = ft_split(trimmed_line, ' ');
+	if (!nodes)
+		free_and_exit("Memory allocation failed", cub, new_line);
+	if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
+		free_and_exit("Invalid element found in config", cub, new_line);
+	if (trimmed_line && is_texture(nodes[0]))
+		parse_texture(nodes, cub);
+	if (trimmed_line && is_color(nodes[0]))
+		parse_color(trimmed_line, cub);
+	// free_array(nodes);
+}
+
+void	parse_config(int fd, t_cub *cub, char *new_line, char *trimmed_line)
+{
 	char	**nodes;
-	int i;
+	int		i;
 
 	i = 0;
+	nodes = NULL;
 	while (1)
 	{
 		new_line = get_next_line(fd);
@@ -77,20 +91,11 @@ void	parse_config(int fd, t_cub *cub)
 			populate_map(new_line, cub, &i);
 			new_line = get_next_line(fd);
 			if (!new_line)
-				return ;
+				return (free(nodes), free(trimmed_line), free(new_line));
 		}
-		nodes = ft_split(trimmed_line, ' ');
-		if (!nodes)
-			free_and_exit("Memory allocation failed", cub, new_line);
-		if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
-			free_and_exit("Invalid element found in config", cub, new_line);
-		if (trimmed_line && is_texture(nodes[0]))
-			parse_texture(nodes, cub);
-		if (trimmed_line && is_color(nodes[0]))
-			parse_color(trimmed_line, cub);
-		// free_array(nodes);
-		// free(new_line);
+		parse_textures_and_colors(new_line, trimmed_line, cub, nodes);
 		// free(trimmed_line);
+		// free(new_line);
 	}
 }
 
@@ -118,17 +123,22 @@ void	print_parsing(t_cub *cub)
 
 void	parsing(char *path, t_cub *cub)
 {
-	int fd;
+	int		fd;
+	char	*new_line;
+	char	*trimmed_line;
 
+	new_line = NULL;
+	trimmed_line = NULL;
 	if (!valid_format(path))
 		exit_with_error("Invalid file format");
 	init_empty_map(cub);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		exit_with_error("No such file or directory");
-	parse_config(fd, cub);
+	parse_config(fd, cub, new_line, trimmed_line);
 	textures_errors_check(cub);
 	colors_errors_check(cub);
 	print_parsing(cub);
 	close(fd);
+	// return (free(new_line), free(trimmed_line));
 }

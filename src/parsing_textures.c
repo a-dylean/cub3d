@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-int is_texture(char *id)
+int	is_texture(char *id)
 {
 	if (!id)
 		return (0);
@@ -8,9 +8,9 @@ int is_texture(char *id)
 		|| ft_strncmp(id, "WE", 3) == 0 || ft_strncmp(id, "EA", 3) == 0);
 }
 
-char *get_path(char *line)
+char	*get_path(char *line)
 {
-	int fd;
+	int	fd;
 
 	fd = open(line, O_RDONLY);
 	if (fd >= 0)
@@ -36,10 +36,9 @@ void	parse_texture(char **nodes, t_cub *cub)
 		exit_with_error("Invalid texture path");
 	}
 	add_txtr_back(&cub->txtr, new_txtr(id, path));
-	free(id);
 }
 
-void textures_errors_check(t_cub *cub)
+void	textures_errors_check(t_cub *cub)
 {
 	if (!cub->txtr)
 		exit_with_error("No textures found");

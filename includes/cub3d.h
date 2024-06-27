@@ -85,6 +85,7 @@ int str_is_numeric(char *str);
 int invalid_commas(char *line);
 void	init_empty_map(t_cub *cub);
 int	map_line(char *line);
+void free_textures(t_txtr *txtr);
 
 /* Textures */
 int is_texture(char *id);

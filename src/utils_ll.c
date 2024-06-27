@@ -75,3 +75,17 @@ int has_duplicates(t_txtr *list)
 	}
 	return (0);
 }
+
+void free_textures(t_txtr *txtr)
+{
+	t_txtr *tmp;
+
+	while (txtr)
+	{
+		tmp = txtr;
+		txtr = txtr->next;
+		free(tmp->orientation);
+		free(tmp->path);
+		free(tmp);
+	}
+}
