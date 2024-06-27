@@ -71,7 +71,7 @@ int str_is_numeric(char *str)
 	i = 0;
 	while(str[i])
 	{
-		if (!ft_isalpha(str[i]))
+		if (!ft_isdigit(str[i]))
 			return (0);
 		i++;
 	}

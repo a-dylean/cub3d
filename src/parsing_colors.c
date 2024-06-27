@@ -15,7 +15,7 @@ int get_rgb_int(char **colors)
 	i = 0;
 	while (colors[i] != NULL)
 	{
-		if (ft_strchr(colors[i], ' ') || str_is_numeric(colors[i]))
+		if (!str_is_numeric(colors[i]))
 			return (-1);
 		int_colors[i] = ft_atoi(colors[i]);
 		if (int_colors[i] < 0 || int_colors[i] > 255)
