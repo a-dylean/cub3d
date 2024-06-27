@@ -29,7 +29,7 @@ int	get_map_height(char *filename)
 	return (close(fd), height);
 }
 
-static void	init_empty_map(t_cub *cub)
+void	init_empty_map(t_cub *cub)
 {
 	int	i;
 
@@ -83,6 +83,8 @@ void	parse_input(char *path, t_cub *cub)
 		nodes = ft_split(trimmed_line, ' ');
 		if (!nodes)
 			free_and_exit("Memory allocation failed", cub, new_line);
+		if (trimmed_line && (trimmed_line[0] != '1' && trimmed_line[0] != ' ') && !is_texture(nodes[0]) && !is_color(nodes[0]))
+			free_and_exit("Invalid element found in config", cub, new_line);
 		if (trimmed_line && is_texture(nodes[0]))
 			parse_texture(nodes, cub);
 		if (trimmed_line && is_color(nodes[0]))
@@ -94,6 +96,6 @@ void	parse_input(char *path, t_cub *cub)
 	close(fd);
 	textures_errors_check(cub);
 	colors_errors_check(cub);
-	printf("Floor color: %d\n", cub->textures.floor_color);
-	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
+	// printf("Floor color: %d\n", cub->textures.floor_color);
+	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
 }

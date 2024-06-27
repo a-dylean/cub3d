@@ -55,8 +55,8 @@ void parse_color(char *line, t_cub *cub)
 	char *temp;
 	int i;
 
+	printf("line: %s\n", line);
 	i = 0;
-	printf("LINE: %s\n", line);
 	if (invalid_commas(line))
 		exit_with_error("Invalid color declaration");
 	temp = ft_strtrim(line, "FC");
