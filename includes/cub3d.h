@@ -23,7 +23,10 @@
 #define BLUE 0x000000FF
 #define WHITE 0x00FFFFFF
 #define YELLOW 0x00FFFF00
-
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
 /* Structures */
 
 typedef struct s_ray
@@ -106,6 +109,10 @@ void				free_and_exit(char *msg, t_cub *cub, char *new_line);
 int					valid_format(char *filename);
 void				free_map(char **map);
 int					get_map_height(char *filename);
+
+/* MLX Utils */
+int					destroyer(t_cub *cub);
+int					key_press(int keycode, t_cub *cub);
 
 /* Textures */
 void				add_txtr_back(t_txtr **txtr, t_txtr *new);

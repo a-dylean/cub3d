@@ -1,41 +1,5 @@
 #include "cub3d.h"
 
-int	destroyer(t_cub *cub)
-{
-	mlx_destroy_window(cub->mlx_ptr, cub->win_ptr);
-	mlx_destroy_display(cub->mlx_ptr);
-	free(cub->mlx_ptr);
-	exit(0);
-	return (0);
-}
-
-int	key_press(int keycode, t_cub *cub)
-{
-	if (keycode == XK_Escape)
-		destroyer(cub);
-	else if (keycode == XK_w)
-	{
-		if (cub->map[(int)(cub->player.y - 1)][(int)(cub->player.x)] == '0')
-			cub->player.y -= 1;
-	}
-	else if (keycode == XK_s)
-	{
-		if (cub->map[(int)(cub->player.y + 1)][(int)(cub->player.x)] == '0')
-			cub->player.y += 1;
-	}
-	else if (keycode == XK_a)
-	{
-		if (cub->map[(int)(cub->player.y)][(int)(cub->player.x - 1)] == '0')
-			cub->player.x -= 1;
-	}
-	else if (keycode == XK_d)
-	{
-		if (cub->map[(int)(cub->player.y)][(int)(cub->player.x + 1)] == '0')
-			cub->player.x += 1;
-	}
-	return (0);
-}
-
 void	init_struct(t_cub *cub, char *filename)
 {
 	cub->map = NULL;
