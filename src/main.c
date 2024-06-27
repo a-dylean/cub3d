@@ -98,8 +98,8 @@ int	main(int argc, char **argv)
 		if (!cub.win_ptr)
 			return (free(cub.mlx_ptr), 1);
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
-		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub); // handle ESC as well
-		mlx_hook(cub.win_ptr, KeyRelease, KeyPressMask, &key_press, &cub);
+		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
+		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}
 	else
