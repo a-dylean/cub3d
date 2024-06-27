@@ -113,6 +113,7 @@ int					get_map_height(char *filename);
 /* MLX Utils */
 int					destroyer(t_cub *cub);
 int					key_press(int keycode, t_cub *cub);
+void   				mouse_move(int x, int y, t_cub *cub);	
 
 /* Textures */
 void				add_txtr_back(t_txtr **txtr, t_txtr *new);

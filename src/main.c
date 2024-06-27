@@ -63,6 +63,7 @@ int	main(int argc, char **argv)
 			return (free(cub.mlx_ptr), 1);
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
+		//mlx_mouse_hook(cub.win_ptr, &mouse_move, &cub);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}

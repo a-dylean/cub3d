@@ -8,7 +8,7 @@ LIBFT = libft/libft.a
 
 MLX_DIR = mlx
 MLX_LIB = $(MLX_DIR)/libmlx.a
-MLX_FLAGS = -L $(MLX_DIR) -lmlx -L/usr/lib/X11 -lXext -lX11
+MLX_FLAGS = -L $(MLX_DIR) -lmlx -L/usr/lib/X11 -lXext -lX11 -lm
 
 all: $(NAME)
 
