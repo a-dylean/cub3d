@@ -57,6 +57,8 @@ void parse_color(char *line, t_cub *cub)
 
 	i = 0;
 	printf("LINE: %s\n", line);
+	if (invalid_commas(line))
+		exit_with_error("Invalid color declaration");
 	temp = ft_strtrim(line, "FC");
 	nodes = ft_split(temp, ',');
 	if (!nodes)
@@ -85,6 +87,7 @@ void parse_color(char *line, t_cub *cub)
 }
 void colors_errors_check(t_cub *cub)
 {
-	(void)cub;
+	if (cub->textures.floor_color <= 0 || cub->textures.ceiling_color <= 0)
+		exit_with_error("Missing color(s) definition");
 	return;
 }

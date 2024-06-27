@@ -82,6 +82,7 @@ void free_array(char **str);
 int list_len(t_txtr *list);
 int has_duplicates(t_txtr *list);
 int str_is_numeric(char *str);
+int invalid_commas(char *line);
 
 /* Textures */
 int is_texture(char *id);

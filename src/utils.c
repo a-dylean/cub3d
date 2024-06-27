@@ -77,3 +77,19 @@ int str_is_numeric(char *str)
 	}
 	return (1);
 }
+
+int invalid_commas(char *line)
+{
+	int i;
+	int commas;
+
+	i = 0;
+	commas = 0;
+	while (line[i])
+	{
+		if (line[i] == ',')
+			commas++;
+		i++;
+	}
+	return (commas != 2);
+}
