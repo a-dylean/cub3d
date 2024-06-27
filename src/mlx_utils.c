@@ -9,18 +9,37 @@ int	destroyer(t_cub *cub)
 	return (0);
 }
 
+// int	key_press(int keycode, t_cub *cub)
+// {
+// 	if (keycode == XK_Escape)
+// 		destroyer(cub);
+// 	else if (keycode == XK_w)
+// 		move_forward(cub);
+// 	else if (keycode == XK_s)
+// 		move_backward(cub);
+// 	else if (keycode == XK_a)
+// 		move_left(cub);
+// 	else if (keycode == XK_d)
+// 		move_right(cub);
+// 	else if (keycode == XK_Left || keycode == XK_Right)
+// 		rotate_player(keycode, cub, 0.05);
+
+// 	return (0);
+// }
+
+//newer version of key_press
 int	key_press(int keycode, t_cub *cub)
 {
 	if (keycode == XK_Escape)
 		destroyer(cub);
 	else if (keycode == XK_w)
-		move_forward(cub);
+		move_player(cub, cub->player.dir_y, cub->player.dir_x);
 	else if (keycode == XK_s)
-		move_backward(cub);
+		move_player(cub, -cub->player.dir_y, -cub->player.dir_x);
 	else if (keycode == XK_a)
-		move_left(cub);
+		move_player(cub, cub->player.dir_x, -cub->player.dir_y);
 	else if (keycode == XK_d)
-		move_right(cub);
+		move_player(cub, -cub->player.dir_x, cub->player.dir_y);
 	else if (keycode == XK_Left || keycode == XK_Right)
 		rotate_player(keycode, cub, 0.05);
 

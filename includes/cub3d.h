@@ -123,6 +123,7 @@ t_txtr				*new_txtr(char *orientation, char *path);
 int 				cast_ray(t_cub *cub);
 
 /* Moves */
+void				move_player(t_cub *cub, double dir_x, double dir_y);
 void				move_forward(t_cub *cub);
 void				move_backward(t_cub *cub);
 void				move_left(t_cub *cub);
