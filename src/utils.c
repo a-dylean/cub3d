@@ -2,6 +2,7 @@
 
 void	free_and_exit(char *msg, t_cub *cub, char *new_line)
 {
+
 	if (ft_strlen(new_line) > 0)
 		free(new_line);
 	free_map(cub->map);
@@ -26,16 +27,16 @@ int	valid_format(char *filename)
 	return (ft_strncmp(filename + len - 4, ".cub", ft_strlen(filename)) == 0);
 }
 
-int str_is_numeric(char *str)
+int	str_is_numeric(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str == NULL)
-    {
-        return (0); 
-    }
-	while(str[i])
+	{
+		return (0);
+	}
+	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
 			return (0);
@@ -44,10 +45,10 @@ int str_is_numeric(char *str)
 	return (1);
 }
 
-int invalid_commas(char *line)
+int	invalid_commas(char *line)
 {
-	int i;
-	int commas;
+	int	i;
+	int	commas;
 
 	i = 0;
 	commas = 0;
@@ -58,4 +59,20 @@ int invalid_commas(char *line)
 		i++;
 	}
 	return (commas != 2);
+}
+
+int	map_line(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == '1' || line[i] == ' ' || line[i] == '0' || line[i] == 'W'
+			|| line[i] == 'E' || line[i] == 'S' || line[i] == 'N' || line[i] == '\n')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
 }

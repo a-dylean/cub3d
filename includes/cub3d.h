@@ -68,7 +68,7 @@ typedef struct s_cub
 
 /* Parsing */
 
-void				parse_input(char *path, t_cub *cub);
+void parsing(char *path, t_cub *cub);
 
 /* Utils */
 
@@ -84,6 +84,7 @@ int has_duplicates(t_txtr *list);
 int str_is_numeric(char *str);
 int invalid_commas(char *line);
 void	init_empty_map(t_cub *cub);
+int	map_line(char *line);
 
 /* Textures */
 int is_texture(char *id);

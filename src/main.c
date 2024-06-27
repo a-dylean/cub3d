@@ -63,7 +63,7 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 	{
 		init_struct(&cub, argv[1]);
-		parse_input(argv[1], &cub);
+		parsing(argv[1], &cub);
 		// cub.mlx_ptr = mlx_init();
 		// if (!cub.mlx_ptr)
 		// 	return (1);

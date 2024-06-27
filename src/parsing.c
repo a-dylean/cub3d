@@ -52,26 +52,18 @@ void	populate_map(char *line, t_cub *cub, int *i)
 	cub->map[*i] = ft_strdup(line);
 	if (!cub->map[*i])
 		free_and_exit("Memory allocation failed", cub, line);
-	// cub->map_width = (int)ft_strlen(line);
 	free(line);
 	(*i)++;
 }
 
-void	parse_input(char *path, t_cub *cub)
+void	parse_config(int fd, t_cub *cub)
 {
-	int		fd;
 	char	*new_line;
 	char	*trimmed_line;
 	char	**nodes;
-	int		i;
+	int i;
 
 	i = 0;
-	if (!valid_format(path))
-		exit_with_error("Invalid file format");
-	fd = open(path, O_RDONLY);
-	if (fd < 0)
-		exit_with_error("No such file or directory");
-	init_empty_map(cub);
 	while (1)
 	{
 		new_line = get_next_line(fd);
@@ -80,22 +72,63 @@ void	parse_input(char *path, t_cub *cub)
 		trimmed_line = ft_strtrim(new_line, SPACES);
 		if (!trimmed_line)
 			continue ;
+		while (trimmed_line && new_line && map_line(new_line))
+		{
+			populate_map(new_line, cub, &i);
+			new_line = get_next_line(fd);
+			if (!new_line)
+				return ;
+		}
 		nodes = ft_split(trimmed_line, ' ');
 		if (!nodes)
 			free_and_exit("Memory allocation failed", cub, new_line);
-		if (trimmed_line && (trimmed_line[0] != '1' && trimmed_line[0] != ' ') && !is_texture(nodes[0]) && !is_color(nodes[0]))
+		if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
 			free_and_exit("Invalid element found in config", cub, new_line);
 		if (trimmed_line && is_texture(nodes[0]))
 			parse_texture(nodes, cub);
 		if (trimmed_line && is_color(nodes[0]))
 			parse_color(trimmed_line, cub);
-		if (trimmed_line && (trimmed_line[0] == '1' || trimmed_line[0] == ' '))
-			populate_map(new_line, cub, &i);
+		// free_array(nodes);
+		// free(new_line);
+		// free(trimmed_line);
 	}
-	// free(new_line);
-	close(fd);
+}
+
+void	print_parsing(t_cub *cub)
+{
+	t_txtr	*current;
+
+	printf("Map height: %d\n", cub->map_height);
+	printf("Map width: %d\n", cub->map_width);
+	printf("Map:\n");
+	for (int i = 0; i < cub->map_height; i++)
+	{
+		printf("map line[%d]: %s\n", i, cub->map[i]);
+	}
+	printf("Floor color: %d\n", cub->textures.floor_color);
+	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
+	current = cub->txtr;
+	while (current)
+	{
+		printf("Texture orientation: %s\n", current->orientation);
+		printf("Texture path: %s\n", current->path);
+		current = current->next;
+	}
+}
+
+void	parsing(char *path, t_cub *cub)
+{
+	int fd;
+
+	if (!valid_format(path))
+		exit_with_error("Invalid file format");
+	init_empty_map(cub);
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		exit_with_error("No such file or directory");
+	parse_config(fd, cub);
 	textures_errors_check(cub);
 	colors_errors_check(cub);
-	// printf("Floor color: %d\n", cub->textures.floor_color);
-	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
+	print_parsing(cub);
+	close(fd);
 }

@@ -33,7 +33,7 @@ void	parse_texture(char **nodes, t_cub *cub)
 	if (!path)
 	{
 		free_array(nodes);
-		exit_with_error("Invalid path");
+		exit_with_error("Invalid texture path");
 	}
 	add_txtr_back(&cub->txtr, new_txtr(id, path));
 	free(id);
