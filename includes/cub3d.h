@@ -130,7 +130,7 @@ void				move_left(t_cub *cub);
 void				move_right(t_cub *cub);
 
 /* Rotations */
-void				rotate_player(int keycode, t_cub *cub, double rotation_speed);
+void				rotate_player(t_cub *cub, double rotation_speed);
 int					mouse_move(int x, int y, t_cub *cub);
 
 #endif

@@ -40,8 +40,9 @@ int	key_press(int keycode, t_cub *cub)
 		move_player(cub, cub->player.dir_x, -cub->player.dir_y);
 	else if (keycode == XK_d)
 		move_player(cub, -cub->player.dir_x, cub->player.dir_y);
-	else if (keycode == XK_Left || keycode == XK_Right)
-		rotate_player(keycode, cub, 0.05);
-
+	else if (keycode == XK_Left)
+		rotate_player(cub, 0.09);
+	else if (keycode == XK_Right)
+		rotate_player(cub, -0.09);
 	return (0);
 }
