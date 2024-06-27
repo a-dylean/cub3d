@@ -55,6 +55,7 @@ typedef struct s_player // everything is declared as double, math functions take
 	double	dir_y; 	/*initial direction y*/
 	double	plane_x;/* Camera plane X*/
 	double	plane_y;/* Camera plane Y*/
+	double	delta_camera_x;
 }	t_player;
 
 typedef struct s_textures
@@ -112,8 +113,7 @@ int					get_map_height(char *filename);
 
 /* MLX Utils */
 int					destroyer(t_cub *cub);
-int					key_press(int keycode, t_cub *cub);
-void   				mouse_move(int x, int y, t_cub *cub);	
+int					key_press(int keycode, t_cub *cub);	
 
 /* Textures */
 void				add_txtr_back(t_txtr **txtr, t_txtr *new);
@@ -121,5 +121,15 @@ t_txtr				*new_txtr(char *orientation, char *path);
 
 /* Raycasting */
 int 				cast_ray(t_cub *cub);
+
+/* Moves */
+void				move_forward(t_cub *cub);
+void				move_backward(t_cub *cub);
+void				move_left(t_cub *cub);
+void				move_right(t_cub *cub);
+
+/* Rotations */
+void				rotate_player(int keycode, t_cub *cub, double rotation_speed);
+int					mouse_move(int x, int y, t_cub *cub);
 
 #endif

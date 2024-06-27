@@ -9,87 +9,6 @@ int	destroyer(t_cub *cub)
 	return (0);
 }
 
-/*added the direction variable for more readbility in the key_press function,
-can be deleted */
-void	move_player(int direction, t_cub *cub, int x, int y)
-{
-	(void)direction;
-	int		new_x;
-	int		new_y;
-
-	new_x = (int)cub->player.x + x;
-	new_y = (int)cub->player.y + y;
-	if (cub->map[new_y][new_x] == '0')
-	{
-		cub->player.x += x;
-		cub->player.y += y;
-	}
-}
-
-void	move_forward(t_cub *cub)
-{
-	if (cub->map[(int)(cub->player.y + cub->player.dir_x * 0.1)][(int)cub->player.x] != '1')
-		cub->player.y += cub->player.dir_x * 0.1;
-	if (cub->map[(int)cub->player.y][(int)(cub->player.x + cub->player.dir_y * 0.1)] != '1')
-		cub->player.x += cub->player.dir_y * 0.1;
-}
-
-void	move_backward(t_cub *cub)
-{
-	if (cub->map[(int)(cub->player.y - cub->player.dir_x * 0.1)][(int)cub->player.x] != '1')
-		cub->player.y -= cub->player.dir_x * 0.1;
-	if (cub->map[(int)cub->player.y][(int)(cub->player.x - cub->player.dir_y * 0.1)] != '1')
-		cub->player.x -= cub->player.dir_y * 0.1;
-}
-
-void	move_left(t_cub *cub)
-{
-	if (cub->map[(int)(cub->player.y - cub->player.dir_y * 0.1)][(int)cub->player.x] != '1')
-		cub->player.y -= cub->player.dir_y * 0.1;
-	if (cub->map[(int)cub->player.y][(int)(cub->player.x + cub->player.dir_x * 0.1)] != '1')
-		cub->player.x += cub->player.dir_x * 0.1;
-}
-
-void	move_right(t_cub *cub)
-{
-	if (cub->map[(int)(cub->player.y + cub->player.dir_y * 0.1)][(int)cub->player.x] != '1')
-		cub->player.y += cub->player.dir_y * 0.1;
-	if (cub->map[(int)cub->player.y][(int)(cub->player.x - cub->player.dir_x * 0.1)] != '1')
-		cub->player.x -= cub->player.dir_x * 0.1;
-}
-
-void	rotate_player(int keycode, t_cub *cub)
-{
-	double	rotation_speed;
-	double	old_dir_x;
-	double	old_plane_x;
-
-	rotation_speed = 0.05;
-	old_dir_x = cub->player.dir_x;
-	old_plane_x = cub->player.plane_x;
-	if (keycode == XK_Left)
-	{
-		cub->player.dir_x = cub->player.dir_x * cos(rotation_speed) - cub->player.dir_y * sin(rotation_speed);
-		cub->player.dir_y = old_dir_x * sin(rotation_speed) + cub->player.dir_y * cos(rotation_speed);
-		cub->player.plane_x = cub->player.plane_x * cos(rotation_speed) - cub->player.plane_y * sin(rotation_speed);
-		cub->player.plane_y = old_plane_x * sin(rotation_speed) + cub->player.plane_y * cos(rotation_speed);
-	}
-	else if (keycode == XK_Right)
-	{
-		cub->player.dir_x = cub->player.dir_x * cos(-rotation_speed) - cub->player.dir_y * sin(-rotation_speed);
-		cub->player.dir_y = old_dir_x * sin(-rotation_speed) + cub->player.dir_y * cos(-rotation_speed);
-		cub->player.plane_x = cub->player.plane_x * cos(-rotation_speed) - cub->player.plane_y * sin(-rotation_speed);
-		cub->player.plane_y = old_plane_x * sin(-rotation_speed) + cub->player.plane_y * cos(-rotation_speed);
-	}
-}
-void   mouse_move(int x, int y, t_cub *cub)
-{
-	(void)x;
-	(void)y;
-	(void)cub;
-	// printf("Mouse moving in Win3, at %dx%d.\n",x,y);
-}
-
 int	key_press(int keycode, t_cub *cub)
 {
 	if (keycode == XK_Escape)
@@ -103,7 +22,7 @@ int	key_press(int keycode, t_cub *cub)
 	else if (keycode == XK_d)
 		move_right(cub);
 	else if (keycode == XK_Left || keycode == XK_Right)
-		rotate_player(keycode, cub);
+		rotate_player(keycode, cub, 0.05);
 
 	return (0);
 }

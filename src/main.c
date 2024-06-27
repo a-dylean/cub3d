@@ -20,6 +20,7 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->player.dir_y = 0;
 	cub->player.plane_x = 0;
 	cub->player.plane_y = 0;
+	cub->player.delta_camera_x = 0;
 	cub->textures.floor_color = YELLOW; // change to real colors taken from map parsing
 	cub->textures.ceiling_color = WHITE;
 }
@@ -63,7 +64,8 @@ int	main(int argc, char **argv)
 			return (free(cub.mlx_ptr), 1);
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
-		//mlx_mouse_hook(cub.win_ptr, &mouse_move, &cub);
+		mlx_hook(cub.win_ptr, MotionNotify, PointerMotionMask, &mouse_move, &cub);
+		mlx_mouse_hide(cub.mlx_ptr, cub.win_ptr);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}

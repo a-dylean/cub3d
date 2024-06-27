@@ -1,0 +1,33 @@
+#include "cub3d.h"
+
+void	move_forward(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y + cub->player.dir_x * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y += cub->player.dir_x * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x + cub->player.dir_y * 0.1)] != '1')
+		cub->player.x += cub->player.dir_y * 0.1;
+}
+
+void	move_backward(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y - cub->player.dir_x * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y -= cub->player.dir_x * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x - cub->player.dir_y * 0.1)] != '1')
+		cub->player.x -= cub->player.dir_y * 0.1;
+}
+
+void	move_left(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y - cub->player.dir_y * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y -= cub->player.dir_y * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x + cub->player.dir_x * 0.1)] != '1')
+		cub->player.x += cub->player.dir_x * 0.1;
+}
+
+void	move_right(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y + cub->player.dir_y * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y += cub->player.dir_y * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x - cub->player.dir_x * 0.1)] != '1')
+		cub->player.x -= cub->player.dir_x * 0.1;
+}
