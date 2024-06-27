@@ -26,6 +26,38 @@ void	move_player(int direction, t_cub *cub, int x, int y)
 	}
 }
 
+void	move_forward(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y + cub->player.dir_x * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y += cub->player.dir_x * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x + cub->player.dir_y * 0.1)] != '1')
+		cub->player.x += cub->player.dir_y * 0.1;
+}
+
+void	move_backward(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y - cub->player.dir_x * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y -= cub->player.dir_x * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x - cub->player.dir_y * 0.1)] != '1')
+		cub->player.x -= cub->player.dir_y * 0.1;
+}
+
+void	move_left(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y - cub->player.dir_y * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y -= cub->player.dir_y * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x + cub->player.dir_x * 0.1)] != '1')
+		cub->player.x += cub->player.dir_x * 0.1;
+}
+
+void	move_right(t_cub *cub)
+{
+	if (cub->map[(int)(cub->player.y + cub->player.dir_y * 0.1)][(int)cub->player.x] != '1')
+		cub->player.y += cub->player.dir_y * 0.1;
+	if (cub->map[(int)cub->player.y][(int)(cub->player.x - cub->player.dir_x * 0.1)] != '1')
+		cub->player.x -= cub->player.dir_x * 0.1;
+}
+
 void	rotate_player(int keycode, t_cub *cub)
 {
 	double	rotation_speed;
@@ -63,13 +95,13 @@ int	key_press(int keycode, t_cub *cub)
 	if (keycode == XK_Escape)
 		destroyer(cub);
 	else if (keycode == XK_w)
-		move_player(UP, cub, 0, -1);
+		move_forward(cub);
 	else if (keycode == XK_s)
-		move_player(DOWN, cub, 0, 1);
+		move_backward(cub);
 	else if (keycode == XK_a)
-		move_player(LEFT, cub, -1, 0);
+		move_left(cub);
 	else if (keycode == XK_d)
-		move_player(RIGHT, cub, 1, 0);
+		move_right(cub);
 	else if (keycode == XK_Left || keycode == XK_Right)
 		rotate_player(keycode, cub);
 

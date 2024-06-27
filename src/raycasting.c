@@ -69,7 +69,7 @@ int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 			hit_east_west = 1;
 		}
 		// Check if ray has hit a wall
-		if (cub->map[ray->map_y][ray->map_x] != '0')
+		if (cub->map[ray->map_y][ray->map_x] == '1')
 			break ;
 	}
 	return (calculate_distance_to_wall(ray, &cub->player, hit_east_west));
