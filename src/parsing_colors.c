@@ -13,7 +13,7 @@ int get_rgb_int(char **colors)
 	int i;
 
 	i = 0;
-	while (colors[i] != NULL)
+	while (i < 3)
 	{
 		if (!str_is_numeric(colors[i]))
 			return (-1);
@@ -55,7 +55,6 @@ void parse_color(char *line, t_cub *cub)
 	char *temp;
 	int i;
 
-	printf("line: %s\n", line);
 	i = 0;
 	if (invalid_commas(line))
 		exit_with_error("Invalid color declaration");
