@@ -18,8 +18,9 @@ int	key_press(int keycode, t_cub *cub)
 
 void	init_struct(t_cub *cub, char *filename)
 {
+	(void)filename;
 	cub->map = NULL;
-	cub->map_height = get_map_height(filename);
+	cub->map_height = 0;
 	cub->map_width = 0;
 	cub->txtr = NULL;
 	cub->mlx_ptr = NULL;
@@ -81,8 +82,8 @@ int	main(int argc, char **argv)
 	{
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
 	}
-	free_map(cub.map);
-	free_textures(cub.txtr);
+	// free_map(cub.map);
+	// free_textures(cub.txtr);
 	// free images
 
 	return (0);

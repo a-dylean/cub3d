@@ -72,7 +72,7 @@ void	parse_color(char *line, t_cub *cub)
 		free_array(nodes);
 		exit_with_error("Invalid color declaration");
 	}
-	colors = malloc(sizeof(char *) * array_len(nodes) + 1);
+	colors = ft_calloc(sizeof(char *) * array_len(nodes) + 1, sizeof(char*));
 	if (!colors)
 		exit_with_error("Memory allocation failed");
 	// init colors array here like so:

@@ -66,10 +66,14 @@ int	map_line(char *line)
 	int i;
 
 	i = 0;
+	if (line == NULL)
+    {
+        return 0; // Or handle the error as appropriate
+    }
 	while (line[i])
 	{
 		if (line[i] == '1' || line[i] == ' ' || line[i] == '0' || line[i] == 'W'
-			|| line[i] == 'E' || line[i] == 'S' || line[i] == 'N' || line[i] == '\n')
+			|| line[i] == 'E' || line[i] == 'S' || line[i] == 'N')
 			i++;
 		else
 			return (0);

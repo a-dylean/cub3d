@@ -70,6 +70,8 @@ typedef struct s_cub
 /* Parsing */
 
 void parsing(char *path, t_cub *cub);
+void validate_map(char **map, int rows);
+int empty_or_spaces_only(char *str);
 
 /* Utils */
 
@@ -77,7 +79,7 @@ void				exit_with_error(char *error);
 void				free_and_exit(char *msg, t_cub *cub, char *new_line);
 int					valid_format(char *filename);
 void				free_map(char **map);
-int					get_map_height(char *filename);
+int					get_map_height(char **config);
 int					array_len(char **array);
 void free_array(char **str);
 int list_len(t_txtr *list);

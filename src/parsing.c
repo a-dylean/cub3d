@@ -1,32 +1,19 @@
 #include "cub3d.h"
 
-int	get_map_height(char *filename)
+int	get_map_height(char **config)
 {
-	int		fd;
+	int i;
 	int		height;
-	char	*new_line;
 
+	i = 0;
 	height = 0;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		exit_with_error("No such file or directory");
-	while (1)
+	while (config[i])
 	{
-		new_line = get_next_line(fd);
-		if (!new_line)
-			break ;
-		while (new_line && (new_line[0] == '1' || new_line[0] == ' '))
-		{
+		if (map_line(config[i]) && !empty_or_spaces_only(config[i]))
 			height++;
-			free(new_line);
-			new_line = get_next_line(fd);
-			if (!new_line)
-				break ;
-		}
-		if (new_line)
-			free(new_line);
+		i++;
 	}
-	return (close(fd), height);
+    return (height);
 }
 
 void	init_empty_map(t_cub *cub)
@@ -47,42 +34,41 @@ void	init_empty_map(t_cub *cub)
 	}
 }
 
-void	populate_map(t_cub *cub)
-{
-	int i;
-	char **content;
+void populate_map(t_cub *cub) {
+    int i = 0;
+    char **content = cub->config_info;
+    int found_non_empty = 0;
 
-	i = 0;
-	content = cub->config_info;
-	while (1)
-	{
-		if (!*content)
-			break;
-		if (map_line(*content))
-		{
-			cub->map[i] = ft_strdup(*content);
-			if (!cub->map[i])
-				free_and_exit("Memory allocation failed", cub, *content);
-			i++;
-		}
-		content++;
-	}
+    while (1) {
+        if (!*content || i >= cub->map_height) {
+            break;
+        }
+        if (!found_non_empty && (*content == NULL || **content == '\0' || map_line(*content) == 0)) {
+            content++;
+            continue;
+        }
+        found_non_empty = 1;
+        if (*content == NULL || **content == '\0' || map_line(*content) == 0) {
+            free_and_exit("Invalid map", cub, *content);
+        }
+        cub->map[i] = ft_strdup(*content);
+        if (!cub->map[i]) {
+            free_and_exit("Memory allocation failed", cub, *content);
+        }
+        i++;
+        content++;
+    }
 }
 
 void parse_map(t_cub *cub)
 {
-	int i;
+	// int i;
 
-	i = 0;
+	// i = 0;
 	populate_map(cub);
-	while(cub->map[i])
-	{
-		//if spaces or emply line 
-			//i++;
-		//check that line is 1 only
-	}
-
-
+	printf("map height: %d\n", cub->map_height);
+	// check_map(cub->map, cub->map_height);
+	validate_map(cub->map, cub->map_height);
 }
 
 void	parse_config(t_cub *cub)
@@ -93,7 +79,7 @@ void	parse_config(t_cub *cub)
 
 	while (1)
 	{
-		printf("line: %s\n", *content);
+		// printf("line: %s\n", *content);
 		if (!*content)
 			break;
 		trimmed_line = ft_strtrim(*content, SPACES);
@@ -200,10 +186,11 @@ void	parsing(char *path, t_cub *cub)
 		exit_with_error("Error while reading a file");
 	
 	parse_config(cub);
+	cub->map_height = get_map_height(cub->config_info);
 	init_empty_map(cub);
 	parse_map(cub);
 
 	textures_errors_check(cub);
 	colors_errors_check(cub);
-	print_parsing(cub);
+	// print_parsing(cub);
 }
