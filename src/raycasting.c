@@ -180,17 +180,14 @@ int	get_pixel(void *img_ptr, int x, int y)
 {
     char    *pixel;
     int     color;
-    t_img   *img;
 	char *data;
 	int bpp;
 	int size_line;
 	int endian;
 
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-    // Assuming t_img is a structure that holds image information including its data pointer
-    img = (t_img *)img_ptr;
-    if (x < 0 || x >= TEXTURE_WIDTH || y < 0 || y >= TEXTURE_HEIGHT)
-        return (0); // Return a default color or handle error if coordinates are out of bounds
+   // if (x < 0 || y < 0)
+     //   return (0); // Return a default color or handle error if coordinates are out of bounds
 
     // Calculate the address of the pixel
     pixel = data + (y * size_line + x * (bpp / 8));
@@ -211,15 +208,45 @@ int set_pixel_color(t_cub *cub, double tex_pos)
     wall_x = where_wall_hit(face, cub);
     texture_x = where_x_on_texture(face, cub, wall_x);
     // Assuming cub->textures.picked_img is properly set to the correct texture based on the ray's direction
-    color = get_pixel(cub->textures.img_ptr_north , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
+	if (face == NORTH)
+   		color = get_pixel(cub->textures.img_ptr_north , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
+	else if (face == SOUTH)
+		color = get_pixel(cub->textures.img_ptr_south , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
+	else if (face == EAST)
+		color = get_pixel(cub->textures.img_ptr_east , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
+	else
+		color = get_pixel(cub->textures.img_ptr_west , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
     return color;
+}
+
+void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end) {
+    int y = draw_start;
+    double wall_height = draw_end - draw_start;
+    double step = (TEXTURE_HEIGHT / wall_height); //* cub->ray.perp_wall_dist; // Calculate how much to step in the texture for each pixel drawn
+    double tex_y = 0; // Start at the top of the texture
+    int color;
+
+    for (y = draw_start; y < draw_end; y++) {
+        // Calculate the exact position on the texture
+        int texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
+        tex_y += step;
+        if (cub->ray.face == NORTH)
+            color = get_pixel(cub->textures.img_ptr_north, where_x_on_texture(NORTH, cub, where_wall_hit(NORTH, cub)), texY);
+        else if (cub->ray.face == SOUTH)
+            color = get_pixel(cub->textures.img_ptr_south, where_x_on_texture(SOUTH, cub, where_wall_hit(SOUTH, cub)), texY);
+        else if (cub->ray.face == EAST)
+            color = get_pixel(cub->textures.img_ptr_east, where_x_on_texture(EAST, cub, where_wall_hit(EAST, cub)), texY);
+        else
+			color = get_pixel(cub->textures.img_ptr_west, where_x_on_texture(WEST, cub, where_wall_hit(WEST, cub)), texY);
+		mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
+    }
 }
 
 int cast_ray(t_cub *cub)
 {
 	int	x;
 	int side;//was a NS or a EW wall hit?
-	int color;
+	//int color;
 
 	x = -1;
 	while (++x < WIDTH)
@@ -230,10 +257,11 @@ int cast_ray(t_cub *cub)
 		get_draw_coordinates(&cub->ray);
 		// color = get_wall_texture(&cub->ray, side);
 		get_wall_texture(&cub->ray, side);
-		color = set_pixel_color(cub, 0);	
-		draw_vertical_line(cub, x, 0, cub->ray.draw_start, WHITE); // modify the color of the floor to use the color from the map parsing
-		draw_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end, color);
-		draw_vertical_line(cub, x, cub->ray.draw_end, HEIGHT, YELLOW);
+		// color = set_pixel_color(cub, 0);	
+		//draw_vertical_line(cub, x, 0, cub->ray.draw_start, WHITE); // modify the color of the floor to use the color from the map parsing
+		// draw_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end, color);
+		draw_textured_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end);
+		//draw_vertical_line(cub, x, cub->ray.draw_end, HEIGHT, YELLOW);
 	}
 	return (0);
 }

@@ -37,7 +37,7 @@ int	load_textures(t_cub *cub) // replace the textures with the correct paths, af
 			"assets/Walls/diamond.xpm", &pos[0], &pos[1]);
 	if (!cub->textures.img_ptr_south)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	cub->textures.img_ptr_south = mlx_xpm_file_to_image(cub->mlx_ptr,
+	cub->textures.img_ptr_west = mlx_xpm_file_to_image(cub->mlx_ptr,
 			"assets/Walls/light_gravel.xpm", &pos[0], &pos[1]);
 	if (!cub->textures.img_ptr_south)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
