@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void	set_direction_and_camera(t_cub *cub, t_player *player, int i, int j)
 {

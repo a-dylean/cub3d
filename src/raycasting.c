@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 /*draw the pixels of the stripe as a vertical line*/
 void	draw_vertical_line(t_cub *cub, int x, int y1, int y2, int color)

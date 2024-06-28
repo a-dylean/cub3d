@@ -14,8 +14,8 @@
 # include <math.h>
 # include <stdbool.h>
 
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 1020
+#define HEIGHT 720
 #define TEXTURE_HEIGHT 64
 #define TEXTURE_WIDTH 64
 #define RED 0x00FF0000

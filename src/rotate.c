@@ -6,11 +6,11 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 18:27:28 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/27 18:27:29 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/06/28 08:54:24 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void	rotate_player(t_cub *cub, double rotation_speed)
 {

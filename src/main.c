@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
 void	init_struct(t_cub *cub, char *filename)
 {
