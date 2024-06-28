@@ -222,10 +222,11 @@ int set_pixel_color(t_cub *cub, double tex_pos)
 void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end) {
     int y = draw_start;
     double wall_height = draw_end - draw_start;
-    double step = (TEXTURE_HEIGHT / wall_height); //* cub->ray.perp_wall_dist; // Calculate how much to step in the texture for each pixel drawn
+    double step = TEXTURE_HEIGHT / wall_height; //* cub->ray.perp_wall_dist; // Calculate how much to step in the texture for each pixel drawn
     double tex_y = 0; // Start at the top of the texture
     int color;
 
+	draw_vertical_line(cub, x, 0, draw_start, BLUE);
     for (y = draw_start; y < draw_end; y++) {
         // Calculate the exact position on the texture
         int texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
@@ -240,6 +241,7 @@ void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end
 			color = get_pixel(cub->textures.img_ptr_west, where_x_on_texture(WEST, cub, where_wall_hit(WEST, cub)), texY);
 		mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
     }
+	draw_vertical_line(cub, x, draw_end, HEIGHT, WHITE);
 }
 
 int cast_ray(t_cub *cub)
