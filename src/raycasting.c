@@ -44,6 +44,7 @@ int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
 		ray->perp_wall_dist = (ray->map_x - player->x + (1 - ray->step_x) / 2) / ray->dir_x;
 	else
 		ray->perp_wall_dist = (ray->map_y - player->y + (1 - ray->step_y) / 2) / ray->dir_y;
+	ray->total_distance += ray->perp_wall_dist;
 	return (east_west);
 }
 
@@ -136,32 +137,28 @@ void	get_wall_texture(t_ray *ray, int side)
 
 double	where_wall_hit(int face, t_cub *cub)
 {
-    double wall_x; // Exact position on the wall where the ray hits
+	double wall_x; // Exact position on the wall where the ray hits
 
-    if (face == EAST || face == WEST)
-    {
-        wall_x = cub->player.y + cub->ray.perp_wall_dist * cub->ray.dir_y;
-    }
-    else
-    {
-        wall_x = cub->player.x + cub->ray.perp_wall_dist * cub->ray.dir_x;
-    }
-    wall_x -= floor(wall_x); // Ensure the value is within 0 and 1
+	if (face == EAST || face == WEST)
+		wall_x = cub->player.y + cub->ray.total_distance * cub->ray.dir_y;
+	else
+		wall_x = cub->player.x + cub->ray.total_distance * cub->ray.dir_x;
+	wall_x -= floor(wall_x); // Ensure the value is within 0 and 1
 
-    return wall_x;
+	return (wall_x);
 }
 
 int where_x_on_texture(int face, t_cub *cub, double wall_x)
 {
-    int texture_x;
+	int	texture_x;
 
-    texture_x = (int)(wall_x * (double)TEXTURE_WIDTH);
-    if ((face == EAST || face == WEST) && cub->ray.dir_x > 0)
-        texture_x = TEXTURE_WIDTH - texture_x - 1;
-    if ((face == NORTH || face == SOUTH) && cub->ray.dir_y < 0)
-        texture_x = TEXTURE_WIDTH - texture_x - 1;
+	texture_x = (int)(wall_x * (double)TEXTURE_WIDTH);
+	if ((face == EAST || face == WEST) && cub->ray.dir_x > 0)
+		texture_x = TEXTURE_WIDTH - texture_x - 1;
+	if ((face == NORTH || face == SOUTH) && cub->ray.dir_y < 0)
+		texture_x = TEXTURE_WIDTH - texture_x - 1;
 
-    return texture_x;
+	return (texture_x);
 }
 
 int	get_pixel(void *img_ptr, int x, int y)
@@ -188,47 +185,46 @@ int	get_pixel(void *img_ptr, int x, int y)
 
 int set_pixel_color(t_cub *cub, double tex_pos)
 {
-    double wall_x;
-    int texture_x;
-    int color;
-    int face = cub->ray.face; // Assuming you have a way to determine the face (NORTH, SOUTH, EAST, WEST)
+	double wall_x;
+	int texture_x;
+	int color;
+	int face = cub->ray.face;
 
-    wall_x = where_wall_hit(face, cub);
-    texture_x = where_x_on_texture(face, cub, wall_x);
-    // Assuming cub->textures.picked_img is properly set to the correct texture based on the ray's direction
+	wall_x = where_wall_hit(face, cub);
+	texture_x = where_x_on_texture(face, cub, wall_x);
 	if (face == NORTH)
-   		color = get_pixel(cub->textures.img_ptr_north , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
+		color = get_pixel(cub->textures.img_ptr_north , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
 	else if (face == SOUTH)
 		color = get_pixel(cub->textures.img_ptr_south , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
 	else if (face == EAST)
 		color = get_pixel(cub->textures.img_ptr_east , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
 	else
 		color = get_pixel(cub->textures.img_ptr_west , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
-    return color;
+	return (color);
 }
 
-void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end) {
-    int y = draw_start;
-    double wall_height = draw_end - draw_start;
-    double step = TEXTURE_HEIGHT / wall_height; //* cub->ray.perp_wall_dist; // Calculate how much to step in the texture for each pixel drawn
-    double tex_y = 0; // Start at the top of the texture
-    int color;
+void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end) 
+{
+	int y = draw_start;
+	double step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / cub->ray.total_distance);
+	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (draw_end - draw_start) / 2);
+	double tex_y = (texture_middle_offset > 0) ? texture_middle_offset : 0;
+	int color;
 
 	draw_vertical_line(cub, x, 0, draw_start, BLUE);
-    for (y = draw_start; y < draw_end; y++) {
-        // Calculate the exact position on the texture
-        int texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
-        tex_y += step;
-        if (cub->ray.face == NORTH)
-            color = get_pixel(cub->textures.img_ptr_north, where_x_on_texture(NORTH, cub, where_wall_hit(NORTH, cub)), texY);
-        else if (cub->ray.face == SOUTH)
-            color = get_pixel(cub->textures.img_ptr_south, where_x_on_texture(SOUTH, cub, where_wall_hit(SOUTH, cub)), texY);
-        else if (cub->ray.face == EAST)
-            color = get_pixel(cub->textures.img_ptr_east, where_x_on_texture(EAST, cub, where_wall_hit(EAST, cub)), texY);
-        else
+	for (y = draw_start; y < draw_end; y++) {
+		int texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
+		tex_y += step;
+		if (cub->ray.face == NORTH)
+			color = get_pixel(cub->textures.img_ptr_north, where_x_on_texture(NORTH, cub, where_wall_hit(NORTH, cub)), texY);
+		else if (cub->ray.face == SOUTH)
+			color = get_pixel(cub->textures.img_ptr_south, where_x_on_texture(SOUTH, cub, where_wall_hit(SOUTH, cub)), texY);
+		else if (cub->ray.face == EAST)
+			color = get_pixel(cub->textures.img_ptr_east, where_x_on_texture(EAST, cub, where_wall_hit(EAST, cub)), texY);
+		else
 			color = get_pixel(cub->textures.img_ptr_west, where_x_on_texture(WEST, cub, where_wall_hit(WEST, cub)), texY);
 		mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
-    }
+	}
 	draw_vertical_line(cub, x, draw_end, HEIGHT, WHITE);
 }
 
@@ -236,22 +232,17 @@ int cast_ray(t_cub *cub)
 {
 	int	x;
 	int side;//was a NS or a EW wall hit?
-	//int color;
 
 	x = -1;
 	while (++x < WIDTH)
 	{
+		cub->ray.total_distance = 0;
 		populate_ray_struct(&cub->ray, &cub->player, x);
 		get_step_and_distance_to_side(&cub->ray, &cub->player);
 		side = perform_dda_algorithm(&cub->ray, cub);
 		get_draw_coordinates(&cub->ray);
-		// color = get_wall_texture(&cub->ray, side);
 		get_wall_texture(&cub->ray, side);
-		// color = set_pixel_color(cub, 0);	
-		//draw_vertical_line(cub, x, 0, cub->ray.draw_start, WHITE); // modify the color of the floor to use the color from the map parsing
-		// draw_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end, color);
 		draw_textured_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end);
-		//draw_vertical_line(cub, x, cub->ray.draw_end, HEIGHT, YELLOW);
 	}
 	return (0);
 }

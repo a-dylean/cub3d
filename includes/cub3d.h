@@ -46,6 +46,7 @@ typedef struct s_ray
 	double	delta_dist_x; // What direction to step in x or y-direction (either +1 or -1)
 	double	delta_dist_y;
 	double	perp_wall_dist;
+	double	total_distance;
 	int		step_x;
 	int		step_y;
 	int		draw_start;
