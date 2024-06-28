@@ -77,50 +77,65 @@ int	first_and_last_char_check(char *str)
 	return (1);
 }
 
+int	length_check(char *row_to_compare, char *curr_row, int i)
+{
+	if (row_to_compare
+		&& (int)ft_strlen(curr_row) > (int)ft_strlen(row_to_compare) && i
+		 >= (int)ft_strlen(row_to_compare))
+	{
+		if (curr_row[i] != '1')
+			return (0);
+	}
+	return (1);
+}
+
+int	spaces_check(char *row_to_compare, char *curr_row, int i)
+{
+	if ((row_to_compare && ft_isspace(row_to_compare[i])))
+	{
+		if (curr_row[i] != '1' && curr_row[i] != ' ')
+			return (0);
+	}
+	return (1);
+}
+
 int	check_conditions(char **arr, int rows)
 {
-	for (int i = 1; i < rows; i++)
+	int		i;
+	int		j;
+	char	*curr_row;
+	char	*row_on_top;
+	char	*row_on_bottom;
+
+	i = 1;
+	while (i < rows)
 	{
-		char *curr_row = arr[i];       
-		char *row_on_top = arr[i - 1]; 
-		char *row_on_bottom = arr[i + 1];
-		for (int j = 0; curr_row[j] != '\0'; j++)
+		curr_row = arr[i];
+		row_on_top = arr[i - 1];
+		row_on_bottom = arr[i + 1];
+		j = 0;
+		while (curr_row[j])
 		{
-			if (row_on_top && (int)ft_strlen(curr_row) > (int)ft_strlen(row_on_top)
-				&& j - 1 > (int)ft_strlen(row_on_top))
-			{
-				if (curr_row[j] != '1')
+				if (!length_check(row_on_top, curr_row, j))
+                    return 0;
+				if (!length_check(row_on_bottom, curr_row, j)) 
                     return (0);
-			}
-			if (row_on_bottom
-				&& (int)ft_strlen(curr_row) > (int)ft_strlen(row_on_bottom) && j
-				+ 1 > (int)ft_strlen(row_on_bottom))
-			{
-				if (curr_row[j] != '1')
-                    return (0);
-			}
-			if ((row_on_top && ft_isspace(row_on_top[j])))
-			{
-				if (curr_row[j] != '1' && curr_row[j] != ' ')
-                    return (0);
-			}
-            if ((row_on_bottom && ft_isspace(row_on_bottom[j])))
-			{
-				if (curr_row[j] != '1' && curr_row[j] != ' ')
-                    return (0);
-			}
+			    if (!spaces_check(row_on_top, curr_row, j))
+                    return 0;
+                if (!spaces_check(row_on_bottom, curr_row, j))
+				    return (0);
+			j++;
 		}
+		i++;
 	}
-    return (1);
+	return (1);
 }
 
 void	validate_map(char **map, int height)
 {
 	int i;
-	// int j;
 
 	i = 0;
-	// j = 0;
 	if (height == 0)
 		exit_with_error("Empty map!");
 	while (i < height)
@@ -136,5 +151,5 @@ void	validate_map(char **map, int height)
 		i++;
 	}
 	if (!check_conditions(map, height))
-        exit_with_error("Invalid border");
+		exit_with_error("Invalid border");
 }
