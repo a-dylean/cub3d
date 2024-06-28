@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
+/*   Updated: 2024/06/28 15:50:34 by jlabonde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 /*draw the pixels of the stripe as a vertical line*/
@@ -41,9 +53,11 @@ will give fisheye effect!)*/
 int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
 {
 	if (east_west == 0)
-		ray->perp_wall_dist = (ray->map_x - player->x + (1 - ray->step_x) / 2) / ray->dir_x;
+		ray->perp_wall_dist = (ray->map_x - player->x
+				+ (1 - ray->step_x) / 2) / ray->dir_x;
 	else
-		ray->perp_wall_dist = (ray->map_y - player->y + (1 - ray->step_y) / 2) / ray->dir_y;
+		ray->perp_wall_dist = (ray->map_y - player->y
+				+ (1 - ray->step_y) / 2) / ray->dir_y;
 	ray->total_distance += ray->perp_wall_dist;
 	return (east_west);
 }
@@ -52,7 +66,7 @@ int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
 points and finds the closest wall that a ray intersects*/
 int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 {
-	int hit_east_west;
+	int	hit_east_west;
 
 	while (true)
 	{
@@ -69,7 +83,6 @@ int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 			ray->map_y += ray->step_y;
 			hit_east_west = 1;
 		}
-		// Check if ray has hit a wall
 		if (cub->map[ray->map_y][ray->map_x] == '1')
 			break ;
 	}
@@ -77,25 +90,26 @@ int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 }
 
 /*calculates the initial step direction and distance to
-the first side (vertical or horizontal) that the ray will intersect*/
+the first side (vertical or horizontal) that the ray will intersect
+Checks first if the ray moves to the left or right, then down or up.*/
 void	get_step_and_distance_to_side(t_ray *ray, t_player *player)
 {
-	if (ray->dir_x < 0) // means that the ray moves to the left
+	if (ray->dir_x < 0)
 	{
 		ray->step_x = -1;
 		ray->side_dist_x = (player->x - ray->map_x) * ray->delta_dist_x;
 	}
-	else // moves to the right
+	else
 	{
 		ray->step_x = 1;
 		ray->side_dist_x = (ray->map_x + 1.0 - player->x) * ray->delta_dist_x;
 	}
-	if (ray->dir_y < 0) // the ray moves down
+	if (ray->dir_y < 0)
 	{
 		ray->step_y = -1;
 		ray->side_dist_y = (player->y - ray->map_y) * ray->delta_dist_y;
 	}
-	else // the ray moves up
+	else
 	{
 		ray->step_y = 1;
 		ray->side_dist_y = (ray->map_y + 1.0 - player->y) * ray->delta_dist_y;
@@ -106,14 +120,14 @@ void	get_step_and_distance_to_side(t_ray *ray, t_player *player)
 and highest pixel to fill in stripe */
 void	get_draw_coordinates(t_ray *ray)
 {
-	int line_height;
+	int	line_height;
 
 	line_height = (int)(HEIGHT / ray->perp_wall_dist);
 	ray->draw_start = -line_height / 2 + HEIGHT / 2;
-	if(ray->draw_start < 0)
+	if (ray->draw_start < 0)
 		ray->draw_start = 0;
 	ray->draw_end = line_height / 2 + HEIGHT / 2;
-	if(ray->draw_end >= HEIGHT)
+	if (ray->draw_end >= HEIGHT)
 		ray->draw_end = HEIGHT - 1;
 }
 
@@ -135,20 +149,21 @@ void	get_wall_texture(t_ray *ray, int side)
 	}
 }
 
+/*Get the exact position on the wall where the ray hits, then ensure
+the value is within 0 and 1*/
 double	where_wall_hit(int face, t_cub *cub)
 {
-	double wall_x; // Exact position on the wall where the ray hits
+	double	wall_x;
 
 	if (face == EAST || face == WEST)
 		wall_x = cub->player.y + cub->ray.total_distance * cub->ray.dir_y;
 	else
 		wall_x = cub->player.x + cub->ray.total_distance * cub->ray.dir_x;
-	wall_x -= floor(wall_x); // Ensure the value is within 0 and 1
-
+	wall_x -= floor(wall_x);
 	return (wall_x);
 }
 
-int where_x_on_texture(int face, t_cub *cub, double wall_x)
+int	where_x_on_texture(int face, t_cub *cub, double wall_x)
 {
 	int	texture_x;
 
@@ -157,38 +172,36 @@ int where_x_on_texture(int face, t_cub *cub, double wall_x)
 		texture_x = TEXTURE_WIDTH - texture_x - 1;
 	if ((face == NORTH || face == SOUTH) && cub->ray.dir_y < 0)
 		texture_x = TEXTURE_WIDTH - texture_x - 1;
-
 	return (texture_x);
 }
 
 int	get_pixel(void *img_ptr, int x, int y)
 {
-    char    *pixel;
-    int     color;
-	char *data;
-	int bpp;
-	int size_line;
-	int endian;
+	char	*pixel;
+	int		color;
+	char	*data;
+	int		bpp;
+	int		size_line;
+	int		endian;
 
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-   // if (x < 0 || y < 0)
-     //   return (0); // Return a default color or handle error if coordinates are out of bounds
-
-    // Calculate the address of the pixel
-    pixel = data + (y * size_line + x * (bpp / 8));
-
-    // Assuming the color format is ARGB (which is common), extract the color
-    color = *(int*)pixel;
-
-    return (color);
+	// if (x < 0 || y < 0)
+	//   return (0); 
+	// Return a default color or handle error if coordinates 
+	//are out of bounds
+	// Calculate the address of the pixel
+	pixel = data + (y * size_line + x * (bpp / 8));
+	// Assuming the color format is ARGB (which is common), extract the color
+	color = *(int *)pixel;
+	return (color);
 }
 
-int set_pixel_color(t_cub *cub, double tex_pos)
+int	set_pixel_color(t_cub *cub, double tex_pos)
 {
-	double wall_x;
-	int texture_x;
-	int color;
-	int face = cub->ray.face;
+	double	wall_x;
+	int		texture_x;
+	int		color;
+	int		face = cub->ray.face;
 
 	wall_x = where_wall_hit(face, cub);
 	texture_x = where_x_on_texture(face, cub, wall_x);
@@ -212,8 +225,9 @@ void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end
 	int color;
 
 	draw_vertical_line(cub, x, 0, draw_start, BLUE);
-	for (y = draw_start; y < draw_end; y++) {
-		int texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
+	for (y = draw_start; y < draw_end; y++)
+	{
+		int	texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
 		tex_y += step;
 		if (cub->ray.face == NORTH)
 			color = get_pixel(cub->textures.img_ptr_north, where_x_on_texture(NORTH, cub, where_wall_hit(NORTH, cub)), texY);
@@ -228,10 +242,10 @@ void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end
 	draw_vertical_line(cub, x, draw_end, HEIGHT, WHITE);
 }
 
-int cast_ray(t_cub *cub)
+int	cast_ray(t_cub *cub)
 {
 	int	x;
-	int side;//was a NS or a EW wall hit?
+	int	wall_orientation;
 
 	x = -1;
 	while (++x < WIDTH)
@@ -239,10 +253,11 @@ int cast_ray(t_cub *cub)
 		cub->ray.total_distance = 0;
 		populate_ray_struct(&cub->ray, &cub->player, x);
 		get_step_and_distance_to_side(&cub->ray, &cub->player);
-		side = perform_dda_algorithm(&cub->ray, cub);
+		wall_orientation = perform_dda_algorithm(&cub->ray, cub);
 		get_draw_coordinates(&cub->ray);
-		get_wall_texture(&cub->ray, side);
-		draw_textured_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end);
+		get_wall_texture(&cub->ray, wall_orientation);
+		draw_textured_vertical_line(cub, x, cub->ray.draw_start,
+			cub->ray.draw_end);
 	}
 	return (0);
 }
