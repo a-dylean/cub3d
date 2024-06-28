@@ -64,7 +64,7 @@ void	parse_color(char *line, t_cub *cub)
 		exit_with_error("Invalid color declaration");
 	temp = ft_strtrim(line, "FC");
 	nodes = ft_split(temp, ',');
-	// free(temp);
+	free(temp);
 	if (!nodes)
 		exit_with_error("Memory allocation failed");
 	if (array_len(nodes) != 3)
@@ -93,8 +93,8 @@ void	parse_color(char *line, t_cub *cub)
 		i++;
 	}
 	set_color_value(line, colors, nodes, cub);
-	// free_array(colors);
-	// free_array(nodes);
+	free_array(colors);
+	free_array(nodes);
 }
 void	colors_errors_check(t_cub *cub)
 {

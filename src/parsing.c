@@ -47,56 +47,76 @@ void	init_empty_map(t_cub *cub)
 	}
 }
 
-void	populate_map(char *line, t_cub *cub, int *i)
+void	populate_map(t_cub *cub)
 {
-	cub->map[*i] = ft_strdup(line);
-	if (!cub->map[*i])
-		free_and_exit("Memory allocation failed", cub, line);
-	free(line);
-	(*i)++;
-}
-
-void	parse_textures_and_colors(char *new_line, char *trimmed_line,
-		t_cub *cub, char **nodes)
-{
-	nodes = ft_split(trimmed_line, ' ');
-	if (!nodes)
-		free_and_exit("Memory allocation failed", cub, new_line);
-	if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
-		free_and_exit("Invalid element found in config", cub, new_line);
-	if (trimmed_line && is_texture(nodes[0]))
-		parse_texture(nodes, cub);
-	if (trimmed_line && is_color(nodes[0]))
-		parse_color(trimmed_line, cub);
-	// free_array(nodes);
-}
-
-void	parse_config(int fd, t_cub *cub, char *new_line, char *trimmed_line)
-{
-	char	**nodes;
-	int		i;
+	int i;
+	char **content;
 
 	i = 0;
-	nodes = NULL;
+	content = cub->config_info;
 	while (1)
 	{
-		new_line = get_next_line(fd);
-		if (!new_line)
-			break ;
-		trimmed_line = ft_strtrim(new_line, SPACES);
-		if (!trimmed_line)
-			continue ;
-		while (trimmed_line && new_line && map_line(new_line))
+		if (!*content)
+			break;
+		if (map_line(*content))
 		{
-			populate_map(new_line, cub, &i);
-			new_line = get_next_line(fd);
-			if (!new_line)
-				return (free(nodes), free(trimmed_line), free(new_line));
+			cub->map[i] = ft_strdup(*content);
+			if (!cub->map[i])
+				free_and_exit("Memory allocation failed", cub, *content);
+			i++;
 		}
-		parse_textures_and_colors(new_line, trimmed_line, cub, nodes);
-		// free(trimmed_line);
-		// free(new_line);
+		content++;
 	}
+}
+
+void parse_map(t_cub *cub)
+{
+	int i;
+
+	i = 0;
+	populate_map(cub);
+	while(cub->map[i])
+	{
+		//if spaces or emply line 
+			//i++;
+		//check that line is 1 only
+	}
+
+
+}
+
+void	parse_config(t_cub *cub)
+{
+	char	**nodes;
+	char 	*trimmed_line;
+	char **content = cub->config_info;
+
+	while (1)
+	{
+		printf("line: %s\n", *content);
+		if (!*content)
+			break;
+		trimmed_line = ft_strtrim(*content, SPACES);
+		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
+        {
+            free(trimmed_line);
+            content++;
+            continue;
+        }
+		if (map_line(*content))
+			break;
+		nodes = ft_split(trimmed_line, ' ');
+		if (!nodes)
+			free_and_exit("Memory allocation failed", cub,*content);
+		if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
+			free_and_exit("Invalid element found in config", cub, *content);
+		if (trimmed_line && is_texture(nodes[0]))
+			parse_texture(nodes, cub);
+		if (trimmed_line && is_color(nodes[0]))
+			parse_color(trimmed_line, cub);
+		content++;
+	}
+	free_array(nodes);
 }
 
 void	print_parsing(t_cub *cub)
@@ -121,24 +141,69 @@ void	print_parsing(t_cub *cub)
 	}
 }
 
-void	parsing(char *path, t_cub *cub)
+int	count_lines_in_file(char *path)
 {
 	int		fd;
-	char	*new_line;
-	char	*trimmed_line;
+	int		count;
+	char	*line;
 
-	new_line = NULL;
-	trimmed_line = NULL;
-	if (!valid_format(path))
-		exit_with_error("Invalid file format");
-	init_empty_map(cub);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		exit_with_error("No such file or directory");
-	parse_config(fd, cub, new_line, trimmed_line);
+		return (perror(path), EXIT_FAILURE);
+	count = 0;
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		count++;
+		free(line);
+	}
+	close(fd);
+	return (count);
+}
+
+int	read_file_into_memory(char *path, t_cub *cub)
+{
+	int	fd;
+	int	i;
+	int	line_len;
+	int rows_count;
+
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (perror(path), EXIT_FAILURE);
+	rows_count = count_lines_in_file(path);
+	cub->config_info = (char **)malloc(sizeof(char *) * (rows_count
+				+ 1));
+	if (!cub->config_info)
+		return (EXIT_FAILURE);
+	i = 0;
+	while (i < rows_count)
+	{
+		cub->config_info[i] = get_next_line(fd);
+		line_len = ft_strlen(cub->config_info[i]);
+		if (line_len > 0 && cub->config_info[i][line_len - 1] == '\n')
+			cub->config_info[i][line_len - 1] = '\0';
+		i++;
+	}
+	cub->config_info[i] = NULL;
+	close(fd);
+	return (EXIT_SUCCESS);
+}
+
+void	parsing(char *path, t_cub *cub)
+{
+	if (!valid_format(path))
+		exit_with_error("Invalid file format");
+	if (read_file_into_memory(path, cub))
+		exit_with_error("Error while reading a file");
+	
+	parse_config(cub);
+	init_empty_map(cub);
+	parse_map(cub);
+
 	textures_errors_check(cub);
 	colors_errors_check(cub);
 	print_parsing(cub);
-	close(fd);
-	// return (free(new_line), free(trimmed_line));
 }

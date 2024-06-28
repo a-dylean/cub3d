@@ -55,6 +55,7 @@ typedef struct s_txtr
 
 typedef struct s_cub
 {
+	char **config_info;
 	char			**map;
 	int				map_height;
 	int				map_width;
