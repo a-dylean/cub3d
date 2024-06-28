@@ -116,33 +116,21 @@ void	get_draw_coordinates(t_ray *ray)
 		ray->draw_end = HEIGHT - 1;
 }
 
-int	get_wall_texture(t_ray *ray, int side)
+void	get_wall_texture(t_ray *ray, int side)
 {
 	if (side == 0)
 	{
 		if (ray->dir_x < 0)
-		{
 			ray->face = WEST;
-			return RED;
-		}
 		else
-		{
 			ray->face = EAST;
-			return BLUE;
-		}
 	}
 	else
 	{
 		if (ray->dir_y < 0)
-		{
 			ray->face = NORTH;
-			return GREEN;
-		}
 		else
-		{
 			ray->face = SOUTH;
-			return WHITE;
-		}
 	}
 }
 
