@@ -2,8 +2,8 @@
 
 int	get_map_height(char **config)
 {
-	int i;
-	int		height;
+	int	i;
+	int	height;
 
 	i = 0;
 	height = 0;
@@ -13,7 +13,7 @@ int	get_map_height(char **config)
 			height++;
 		i++;
 	}
-    return (height);
+	return (height);
 }
 
 void	init_empty_map(t_cub *cub)
@@ -34,36 +34,45 @@ void	init_empty_map(t_cub *cub)
 	}
 }
 
-void populate_map(t_cub *cub) {
-    int i = 0;
-    char **content = cub->config_info;
-    int found_non_empty = 0;
+void	populate_map(t_cub *cub)
+{
+	int		i;
+	char	**content;
+	int		found_non_empty;
 
-    while (1) {
-        if (!*content || i >= cub->map_height) {
-            break;
-        }
-        if (!found_non_empty && (*content == NULL || **content == '\0' || map_line(*content) == 0)) {
-            content++;
-            continue;
-        }
-        found_non_empty = 1;
-        if (*content == NULL || **content == '\0' || map_line(*content) == 0) {
-            free_and_exit("Invalid map", cub, *content);
-        }
-        cub->map[i] = ft_strdup(*content);
-        if (!cub->map[i]) {
-            free_and_exit("Memory allocation failed", cub, *content);
-        }
-        i++;
-        content++;
-    }
+	i = 0;
+	content = cub->config_info;
+	found_non_empty = 0;
+	while (1)
+	{
+		if (!*content || i >= cub->map_height)
+		{
+			break ;
+		}
+		if (!found_non_empty && (*content == NULL || **content == '\0'
+				|| map_line(*content) == 0))
+		{
+			content++;
+			continue ;
+		}
+		found_non_empty = 1;
+		if (*content == NULL || **content == '\0' || map_line(*content) == 0)
+		{
+			free_and_exit("Invalid map", cub, *content);
+		}
+		cub->map[i] = ft_strdup(*content);
+		if (!cub->map[i])
+		{
+			free_and_exit("Memory allocation failed", cub, *content);
+		}
+		i++;
+		content++;
+	}
 }
 
-void parse_map(t_cub *cub)
+void	parse_map(t_cub *cub)
 {
 	// int i;
-
 	// i = 0;
 	populate_map(cub);
 	printf("map height: %d\n", cub->map_height);
@@ -74,26 +83,26 @@ void parse_map(t_cub *cub)
 void	parse_config(t_cub *cub)
 {
 	char	**nodes;
-	char 	*trimmed_line;
-	char **content = cub->config_info;
+	char	*trimmed_line;
+	char	**content;
 
+	content = cub->config_info;
 	while (1)
 	{
-		// printf("line: %s\n", *content);
 		if (!*content)
-			break;
+			break ;
 		trimmed_line = ft_strtrim(*content, SPACES);
 		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
-        {
-            free(trimmed_line);
-            content++;
-            continue;
-        }
+		{
+			free(trimmed_line);
+			content++;
+			continue ;
+		}
 		if (map_line(*content))
-			break;
+			break ;
 		nodes = ft_split(trimmed_line, ' ');
 		if (!nodes)
-			free_and_exit("Memory allocation failed", cub,*content);
+			free_and_exit("Memory allocation failed", cub, *content);
 		if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
 			free_and_exit("Invalid element found in config", cub, *content);
 		if (trimmed_line && is_texture(nodes[0]))
@@ -154,14 +163,13 @@ int	read_file_into_memory(char *path, t_cub *cub)
 	int	fd;
 	int	i;
 	int	line_len;
-	int rows_count;
+	int	rows_count;
 
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return (perror(path), EXIT_FAILURE);
 	rows_count = count_lines_in_file(path);
-	cub->config_info = (char **)malloc(sizeof(char *) * (rows_count
-				+ 1));
+	cub->config_info = (char **)malloc(sizeof(char *) * (rows_count + 1));
 	if (!cub->config_info)
 		return (EXIT_FAILURE);
 	i = 0;
@@ -184,7 +192,7 @@ void	parsing(char *path, t_cub *cub)
 		exit_with_error("Invalid file format");
 	if (read_file_into_memory(path, cub))
 		exit_with_error("Error while reading a file");
-	
+
 	parse_config(cub);
 	cub->map_height = get_map_height(cub->config_info);
 	init_empty_map(cub);
