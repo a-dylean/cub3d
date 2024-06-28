@@ -14,19 +14,19 @@ int	top_and_bottom_check(char *str)
 	return (1);
 }
 
-int	ft_strspn(const char *s, const char *accept)
-{
-	int	i;
+// int	ft_strspn(const char *s, const char *accept)
+// {
+// 	int	i;
 
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (ft_strchr(accept, s[i]) == 0)
-			break ;
-		++i;
-	}
-	return (i);
-}
+// 	i = 0;
+// 	while (s[i] != '\0')
+// 	{
+// 		if (ft_strchr(accept, s[i]) == 0)
+// 			break ;
+// 		++i;
+// 	}
+// 	return (i);
+// }
 
 int	empty_or_spaces_only(char *str)
 {
@@ -79,9 +79,12 @@ int	first_and_last_char_check(char *str)
 
 int	length_check(char *row_to_compare, char *curr_row, int i)
 {
+	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row)) {
+        return 1;
+    }
 	if (row_to_compare
-		&& (int)ft_strlen(curr_row) > (int)ft_strlen(row_to_compare) && i
-		 >= (int)ft_strlen(row_to_compare))
+		&& (int)ft_strlen(curr_row) > (int)ft_strlen(row_to_compare)
+		&& i >= (int)ft_strlen(row_to_compare))
 	{
 		if (curr_row[i] != '1')
 			return (0);
@@ -91,6 +94,9 @@ int	length_check(char *row_to_compare, char *curr_row, int i)
 
 int	spaces_check(char *row_to_compare, char *curr_row, int i)
 {
+	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row)) {
+        return 1;
+    }
 	if ((row_to_compare && ft_isspace(row_to_compare[i])))
 	{
 		if (curr_row[i] != '1' && curr_row[i] != ' ')
@@ -116,13 +122,13 @@ int	check_conditions(char **arr, int rows)
 		j = 0;
 		while (curr_row[j])
 		{
-				if (!length_check(row_on_top, curr_row, j))
+				if (row_on_top && !length_check(row_on_top, curr_row, j))
                     return 0;
-				if (!length_check(row_on_bottom, curr_row, j)) 
+				if (row_on_bottom && !length_check(row_on_bottom, curr_row, j)) 
                     return (0);
-			    if (!spaces_check(row_on_top, curr_row, j))
+			    if (row_on_top && !spaces_check(row_on_top, curr_row, j))
                     return 0;
-                if (!spaces_check(row_on_bottom, curr_row, j))
+                if (row_on_bottom && !spaces_check(row_on_bottom, curr_row, j))
 				    return (0);
 			j++;
 		}
