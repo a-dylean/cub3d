@@ -118,20 +118,101 @@ void	get_draw_coordinates(t_ray *ray)
 
 int	get_wall_texture(t_ray *ray, int side)
 {
-	if (side == 0) // NS wall
+	if (side == 0)
 	{
 		if (ray->dir_x < 0)
-			return RED; // West wall
+		{
+			ray->face = WEST;
+			return RED;
+		}
 		else
-			return BLUE; // East wall
+		{
+			ray->face = EAST;
+			return BLUE;
+		}
 	}
-	else // EW wall
+	else
 	{
 		if (ray->dir_y < 0)
-			return GREEN; // North wall
+		{
+			ray->face = NORTH;
+			return GREEN;
+		}
 		else
-			return WHITE; // South wall
+		{
+			ray->face = SOUTH;
+			return WHITE;
+		}
 	}
+}
+
+double	where_wall_hit(int face, t_cub *cub)
+{
+    double wall_x; // Exact position on the wall where the ray hits
+
+    if (face == EAST || face == WEST)
+    {
+        wall_x = cub->player.y + cub->ray.perp_wall_dist * cub->ray.dir_y;
+    }
+    else
+    {
+        wall_x = cub->player.x + cub->ray.perp_wall_dist * cub->ray.dir_x;
+    }
+    wall_x -= floor(wall_x); // Ensure the value is within 0 and 1
+
+    return wall_x;
+}
+
+int where_x_on_texture(int face, t_cub *cub, double wall_x)
+{
+    int texture_x;
+
+    texture_x = (int)(wall_x * (double)TEXTURE_WIDTH);
+    if ((face == EAST || face == WEST) && cub->ray.dir_x > 0)
+        texture_x = TEXTURE_WIDTH - texture_x - 1;
+    if ((face == NORTH || face == SOUTH) && cub->ray.dir_y < 0)
+        texture_x = TEXTURE_WIDTH - texture_x - 1;
+
+    return texture_x;
+}
+
+int	get_pixel(void *img_ptr, int x, int y)
+{
+    char    *pixel;
+    int     color;
+    t_img   *img;
+	char *data;
+	int bpp;
+	int size_line;
+	int endian;
+
+	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
+    // Assuming t_img is a structure that holds image information including its data pointer
+    img = (t_img *)img_ptr;
+    if (x < 0 || x >= TEXTURE_WIDTH || y < 0 || y >= TEXTURE_HEIGHT)
+        return (0); // Return a default color or handle error if coordinates are out of bounds
+
+    // Calculate the address of the pixel
+    pixel = data + (y * size_line + x * (bpp / 8));
+
+    // Assuming the color format is ARGB (which is common), extract the color
+    color = *(int*)pixel;
+
+    return (color);
+}
+
+int set_pixel_color(t_cub *cub, double tex_pos)
+{
+    double wall_x;
+    int texture_x;
+    int color;
+    int face = cub->ray.face; // Assuming you have a way to determine the face (NORTH, SOUTH, EAST, WEST)
+
+    wall_x = where_wall_hit(face, cub);
+    texture_x = where_x_on_texture(face, cub, wall_x);
+    // Assuming cub->textures.picked_img is properly set to the correct texture based on the ray's direction
+    color = get_pixel(cub->textures.img_ptr_north , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
+    return color;
 }
 
 int cast_ray(t_cub *cub)
@@ -147,7 +228,9 @@ int cast_ray(t_cub *cub)
 		get_step_and_distance_to_side(&cub->ray, &cub->player);
 		side = perform_dda_algorithm(&cub->ray, cub);
 		get_draw_coordinates(&cub->ray);
-		color = get_wall_texture(&cub->ray, side);		
+		// color = get_wall_texture(&cub->ray, side);
+		get_wall_texture(&cub->ray, side);
+		color = set_pixel_color(cub, 0);	
 		draw_vertical_line(cub, x, 0, cub->ray.draw_start, WHITE); // modify the color of the floor to use the color from the map parsing
 		draw_vertical_line(cub, x, cub->ray.draw_start, cub->ray.draw_end, color);
 		draw_vertical_line(cub, x, cub->ray.draw_end, HEIGHT, YELLOW);

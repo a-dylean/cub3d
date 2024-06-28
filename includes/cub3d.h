@@ -23,6 +23,10 @@
 #define BLUE 0x000000FF
 #define WHITE 0x00FFFFFF
 #define YELLOW 0x00FFFF00
+#define NORTH 10
+#define SOUTH 11
+#define EAST 12
+#define WEST 13
 #define UP 0
 #define DOWN 1
 #define LEFT 2
@@ -31,6 +35,7 @@
 
 typedef struct s_ray
 {
+	int		face; // What direction is the wall (NO, SO, EA, WE)
 	double	camera_x;
 	double	dir_x;
 	double	dir_y;
