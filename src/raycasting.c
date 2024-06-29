@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/29 17:58:11 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/06/29 18:07:50 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	draw_pixel(t_img *img, int x, int y, int color)
 }
 
 /*draw the pixels of the stripe as a vertical line*/
-void	draw_floor_and_ceiling(t_img *img, int draw_start, int draw_end, t_textures *textures)
+void	draw_floor_and_ceiling(t_img *img, int draw_start,
+	int draw_end, t_textures *textures)
 {
 	int	i;
 
@@ -75,7 +76,6 @@ int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 
 	while (true)
 	{
-		// Jump to next map square, OR in x-direction, OR in y-direction
 		if (ray->side_dist_x < ray->side_dist_y)
 		{
 			ray->side_dist_x += ray->delta_dist_x;
@@ -191,8 +191,7 @@ int	get_pixel(void *img_ptr, int x, int y)
 
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	if (x < 0 || y < 0)
-	  return (0); 
-
+		return (0);
 	pixel = data + (y * size_line + x * (bpp / 8));
 	color = *(int *)pixel;
 	return (color);
