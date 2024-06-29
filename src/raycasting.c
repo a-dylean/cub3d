@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/29 17:34:58 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/06/29 17:58:11 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,20 @@ void	draw_pixel(t_img *img, int x, int y, int color)
 }
 
 /*draw the pixels of the stripe as a vertical line*/
-void	draw_floor_and_ceiling(t_img *img, int draw_start, int draw_end, int color)
+void	draw_floor_and_ceiling(t_img *img, int draw_start, int draw_end, t_textures *textures)
 {
-	while (draw_start <= draw_end)
+	int	i;
+
+	i = 0;
+	while (i <= draw_start)
 	{
-		draw_pixel(img, img->x, draw_start, color);
-		draw_start++;
+		draw_pixel(img, img->x, i, textures->ceiling_color);
+		i++;
+	}
+	while (draw_end <= HEIGHT)
+	{
+		draw_pixel(img, img->x, draw_end, textures->floor_color);
+		draw_end++;
 	}
 }
 
@@ -182,34 +190,11 @@ int	get_pixel(void *img_ptr, int x, int y)
 	int		endian;
 
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-	// if (x < 0 || y < 0)
-	//   return (0); 
-	// Return a default color or handle error if coordinates 
-	//are out of bounds
-	// Calculate the address of the pixel
+	if (x < 0 || y < 0)
+	  return (0); 
+
 	pixel = data + (y * size_line + x * (bpp / 8));
-	// Assuming the color format is ARGB (which is common), extract the color
 	color = *(int *)pixel;
-	return (color);
-}
-
-int	set_pixel_color(t_cub *cub, double tex_pos)
-{
-	double	wall_x;
-	int		texture_x;
-	int		color;
-	int		face = cub->ray.face;
-
-	wall_x = where_wall_hit(face, cub);
-	texture_x = where_x_on_texture(face, cub, wall_x);
-	if (face == NORTH)
-		color = get_pixel(cub->textures.img_ptr_north , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
-	else if (face == SOUTH)
-		color = get_pixel(cub->textures.img_ptr_south , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
-	else if (face == EAST)
-		color = get_pixel(cub->textures.img_ptr_east , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
-	else
-		color = get_pixel(cub->textures.img_ptr_west , texture_x, (int)tex_pos & (TEXTURE_WIDTH - 1));
 	return (color);
 }
 
@@ -224,28 +209,34 @@ void	*get_texture(t_cub *cub, int face)
 	else
 		return (cub->textures.img_ptr_west);
 }
+
 /*Renders a vertical slice of the wall, along with the ceiling and floor into 
 a buffer, by moving through the texture vertically and scaling
 it correctly depending on the player's distance to the wall*/
-void draw_image_into_buffer(t_cub *cub, t_img *img, t_ray *ray, t_textures *textures) 
+void	draw_image_into_buffer(t_cub *cub, t_img *img,
+	t_ray *ray, t_textures *textures)
 {
-	int y;
-	double step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / ray->total_distance);
-	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (ray->draw_end - ray->draw_start) / 2);
-	double tex_y = (texture_middle_offset > 0) ? texture_middle_offset : 0;
-	int	texY;
+	int	y;
 
+	textures->step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / ray->total_distance);
+	textures->middle_offset = (TEXTURE_HEIGHT / 2)
+		- (textures->step * (ray->draw_end - ray->draw_start) / 2);
+	if (textures->middle_offset < 0)
+		textures->middle_offset = 0;
+	else
+		textures->tex_y = textures->middle_offset;
 	y = ray->draw_start;
-	draw_floor_and_ceiling(img, 0, ray->draw_start, cub->textures.ceiling_color);
+	draw_floor_and_ceiling(img, ray->draw_start, ray->draw_end, textures);
 	while (y < ray->draw_end)
 	{
-		texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
-		tex_y += step;
-		textures->color = get_pixel(get_texture(cub, ray->face), where_x_on_texture(ray->face, cub, where_wall_hit(ray->face, cub)), texY);
+		textures->wrap_adjustor = (int)textures->tex_y & (TEXTURE_HEIGHT - 1);
+		textures->tex_y += textures->step;
+		textures->color = get_pixel(get_texture(cub, ray->face),
+				where_x_on_texture(ray->face, cub,
+					where_wall_hit(ray->face, cub)), textures->wrap_adjustor);
 		draw_pixel(img, img->x, y, textures->color);
 		y++;
 	}
-	draw_floor_and_ceiling(img, ray->draw_end, HEIGHT, cub->textures.floor_color);
 }
 
 int	cast_ray(t_cub *cub)

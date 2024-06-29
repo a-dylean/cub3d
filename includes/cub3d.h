@@ -74,7 +74,7 @@ typedef struct s_textures
 	int		ceiling_color;
 	int		color;
 	double	step;
-	double	tex_middle_offset;
+	double	middle_offset;
 	double	tex_y;
 	int		wrap_adjustor;
 }	t_textures;
