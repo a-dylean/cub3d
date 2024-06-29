@@ -76,7 +76,7 @@ typedef struct s_textures
 
 typedef struct s_img
 {
-	void			*img;
+	void			*img_ptr;
 	char			*address;
 	int				bits_per_pixel;
 	int				line_length;
