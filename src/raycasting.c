@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/29 16:35:56 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/06/29 16:41:34 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,16 +218,16 @@ int	set_pixel_color(t_cub *cub, double tex_pos)
 	return (color);
 }
 
-void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end, char *img_data, int line_length, int bits_per_pixel) 
+void draw_textured_vertical_line(t_cub *cub, t_img *img, int x) 
 {
-	int y = draw_start;
+	int y = cub->ray.draw_start;
 	double step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / cub->ray.total_distance);
-	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (draw_end - draw_start) / 2);
+	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (cub->ray.draw_end - cub->ray.draw_start) / 2);
 	double tex_y = (texture_middle_offset > 0) ? texture_middle_offset : 0;
 	int color;
 	
-	draw_vertical_line(cub, x, 0, draw_start, BLUE, img_data, line_length, bits_per_pixel);
-	for (y = draw_start; y < draw_end; y++)
+	draw_vertical_line(cub, x, 0, cub->ray.draw_start, BLUE, img->address, img->line_length, img->bits_per_pixel);
+	for (y = cub->ray.draw_start; y < cub->ray.draw_end; y++)
 	{
 		int	texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
 		tex_y += step;
@@ -239,10 +239,10 @@ void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end
 			color = get_pixel(cub->textures.img_ptr_east, where_x_on_texture(EAST, cub, where_wall_hit(EAST, cub)), texY);
 		else
 			color = get_pixel(cub->textures.img_ptr_west, where_x_on_texture(WEST, cub, where_wall_hit(WEST, cub)), texY);
-        int pos = (y * line_length) + (x * (bits_per_pixel / 8));
-        *(int*)(img_data + pos) = color;
+        int pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
+        *(int*)(img->address + pos) = color;
 	}
-	draw_vertical_line(cub, x, draw_end, HEIGHT, WHITE, img_data, line_length, bits_per_pixel);
+	draw_vertical_line(cub, x, cub->ray.draw_end, HEIGHT, WHITE, img->address, img->line_length, img->bits_per_pixel);
 }
 
 int	cast_ray(t_cub *cub)
@@ -263,8 +263,7 @@ int	cast_ray(t_cub *cub)
 		wall_orientation = perform_dda_algorithm(&cub->ray, cub);
 		get_draw_coordinates(&cub->ray);
 		get_wall_texture(&cub->ray, wall_orientation);
-		draw_textured_vertical_line(cub, x, cub->ray.draw_start,
-			cub->ray.draw_end, cub->img->address, cub->img->line_length, cub->img->bits_per_pixel);
+		draw_textured_vertical_line(cub, cub->img, x);
 	}
 	mlx_put_image_to_window(cub->mlx_ptr, cub->win_ptr, cub->img->img_ptr, 0, 0);
 	mlx_destroy_image(cub->mlx_ptr, cub->img->img_ptr);
