@@ -6,18 +6,18 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/28 15:50:34 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/06/29 14:56:50 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
 /*draw the pixels of the stripe as a vertical line*/
-void	draw_vertical_line(t_cub *cub, int x, int y1, int y2, int color)
+void	draw_vertical_line(t_cub *cub, int x, int y1, int y2, int color, char *img_data, int line_length, int bits_per_pixel)
 {
 	int	y;
 	int	temp;
-
+	(void)cub;
 	temp = 0;
 	if (y2 < y1)
 	{
@@ -28,7 +28,9 @@ void	draw_vertical_line(t_cub *cub, int x, int y1, int y2, int color)
 	y = y1;
 	while (y <= y2)
 	{
-		mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
+		int pos = (y * line_length) + (x * (bits_per_pixel / 8));
+        *(int*)(img_data + pos) = color;
+		//mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
 		y++;
 	}
 }
@@ -216,15 +218,15 @@ int	set_pixel_color(t_cub *cub, double tex_pos)
 	return (color);
 }
 
-void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end) 
+void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end, char *img_data, int line_length, int bits_per_pixel) 
 {
 	int y = draw_start;
 	double step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / cub->ray.total_distance);
 	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (draw_end - draw_start) / 2);
 	double tex_y = (texture_middle_offset > 0) ? texture_middle_offset : 0;
 	int color;
-
-	draw_vertical_line(cub, x, 0, draw_start, BLUE);
+	
+	draw_vertical_line(cub, x, 0, draw_start, BLUE, img_data, line_length, bits_per_pixel);
 	for (y = draw_start; y < draw_end; y++)
 	{
 		int	texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
@@ -237,16 +239,23 @@ void draw_textured_vertical_line(t_cub *cub, int x, int draw_start, int draw_end
 			color = get_pixel(cub->textures.img_ptr_east, where_x_on_texture(EAST, cub, where_wall_hit(EAST, cub)), texY);
 		else
 			color = get_pixel(cub->textures.img_ptr_west, where_x_on_texture(WEST, cub, where_wall_hit(WEST, cub)), texY);
-		mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
+		// mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
+        int pos = (y * line_length) + (x * (bits_per_pixel / 8));
+        *(int*)(img_data + pos) = color;
 	}
-	draw_vertical_line(cub, x, draw_end, HEIGHT, WHITE);
+	draw_vertical_line(cub, x, draw_end, HEIGHT, WHITE, img_data, line_length, bits_per_pixel);
 }
 
 int	cast_ray(t_cub *cub)
 {
 	int	x;
 	int	wall_orientation;
-
+	int	bits_per_pixel;
+	int	line_length;
+	int	endian;
+	void *img_ptr = mlx_new_image(cub->mlx_ptr, WIDTH, HEIGHT);
+	char *img_data = mlx_get_data_addr(img_ptr, &bits_per_pixel, &line_length, &endian);
+	
 	x = -1;
 	while (++x < WIDTH)
 	{
@@ -257,7 +266,9 @@ int	cast_ray(t_cub *cub)
 		get_draw_coordinates(&cub->ray);
 		get_wall_texture(&cub->ray, wall_orientation);
 		draw_textured_vertical_line(cub, x, cub->ray.draw_start,
-			cub->ray.draw_end);
+			cub->ray.draw_end, img_data, line_length, bits_per_pixel);
 	}
+	mlx_put_image_to_window(cub->mlx_ptr, cub->win_ptr, img_ptr, 0, 0);
+	mlx_destroy_image(cub->mlx_ptr, img_ptr);
 	return (0);
 }
