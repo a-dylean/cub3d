@@ -6,32 +6,27 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/29 16:41:34 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/06/29 17:34:58 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-/*draw the pixels of the stripe as a vertical line*/
-void	draw_vertical_line(t_cub *cub, int x, int y1, int y2, int color, char *img_data, int line_length, int bits_per_pixel)
+void	draw_pixel(t_img *img, int x, int y, int color)
 {
-	int	y;
-	int	temp;
-	(void)cub;
-	temp = 0;
-	if (y2 < y1)
+	int	pos;
+
+	pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
+	*(int *)(img->address + pos) = color;
+}
+
+/*draw the pixels of the stripe as a vertical line*/
+void	draw_floor_and_ceiling(t_img *img, int draw_start, int draw_end, int color)
+{
+	while (draw_start <= draw_end)
 	{
-		temp = y1;
-		y1 = y2;
-		y2 = temp;
-	}
-	y = y1;
-	while (y <= y2)
-	{
-		int pos = (y * line_length) + (x * (bits_per_pixel / 8));
-        *(int*)(img_data + pos) = color;
-		//mlx_pixel_put(cub->mlx_ptr, cub->win_ptr, x, y, color);
-		y++;
+		draw_pixel(img, img->x, draw_start, color);
+		draw_start++;
 	}
 }
 
@@ -218,54 +213,62 @@ int	set_pixel_color(t_cub *cub, double tex_pos)
 	return (color);
 }
 
-void draw_textured_vertical_line(t_cub *cub, t_img *img, int x) 
+void	*get_texture(t_cub *cub, int face)
 {
-	int y = cub->ray.draw_start;
-	double step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / cub->ray.total_distance);
-	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (cub->ray.draw_end - cub->ray.draw_start) / 2);
+	if (face == NORTH)
+		return (cub->textures.img_ptr_north);
+	else if (face == SOUTH)
+		return (cub->textures.img_ptr_south);
+	else if (face == EAST)
+		return (cub->textures.img_ptr_east);
+	else
+		return (cub->textures.img_ptr_west);
+}
+/*Renders a vertical slice of the wall, along with the ceiling and floor into 
+a buffer, by moving through the texture vertically and scaling
+it correctly depending on the player's distance to the wall*/
+void draw_image_into_buffer(t_cub *cub, t_img *img, t_ray *ray, t_textures *textures) 
+{
+	int y;
+	double step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / ray->total_distance);
+	double texture_middle_offset = (TEXTURE_HEIGHT / 2) - (step * (ray->draw_end - ray->draw_start) / 2);
 	double tex_y = (texture_middle_offset > 0) ? texture_middle_offset : 0;
-	int color;
-	
-	draw_vertical_line(cub, x, 0, cub->ray.draw_start, BLUE, img->address, img->line_length, img->bits_per_pixel);
-	for (y = cub->ray.draw_start; y < cub->ray.draw_end; y++)
+	int	texY;
+
+	y = ray->draw_start;
+	draw_floor_and_ceiling(img, 0, ray->draw_start, cub->textures.ceiling_color);
+	while (y < ray->draw_end)
 	{
-		int	texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
+		texY = (int)tex_y & (TEXTURE_HEIGHT - 1);
 		tex_y += step;
-		if (cub->ray.face == NORTH)
-			color = get_pixel(cub->textures.img_ptr_north, where_x_on_texture(NORTH, cub, where_wall_hit(NORTH, cub)), texY);
-		else if (cub->ray.face == SOUTH)
-			color = get_pixel(cub->textures.img_ptr_south, where_x_on_texture(SOUTH, cub, where_wall_hit(SOUTH, cub)), texY);
-		else if (cub->ray.face == EAST)
-			color = get_pixel(cub->textures.img_ptr_east, where_x_on_texture(EAST, cub, where_wall_hit(EAST, cub)), texY);
-		else
-			color = get_pixel(cub->textures.img_ptr_west, where_x_on_texture(WEST, cub, where_wall_hit(WEST, cub)), texY);
-        int pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
-        *(int*)(img->address + pos) = color;
+		textures->color = get_pixel(get_texture(cub, ray->face), where_x_on_texture(ray->face, cub, where_wall_hit(ray->face, cub)), texY);
+		draw_pixel(img, img->x, y, textures->color);
+		y++;
 	}
-	draw_vertical_line(cub, x, cub->ray.draw_end, HEIGHT, WHITE, img->address, img->line_length, img->bits_per_pixel);
+	draw_floor_and_ceiling(img, ray->draw_end, HEIGHT, cub->textures.floor_color);
 }
 
 int	cast_ray(t_cub *cub)
 {
-	int	x;
-	int	wall_orientation;
-	t_img img;
+	int		wall_orientation;
+	t_img	img;
+
 	cub->img = &img;
 	cub->img->img_ptr = mlx_new_image(cub->mlx_ptr, WIDTH, HEIGHT);
-	cub->img->address = mlx_get_data_addr(cub->img->img_ptr, &cub->img->bits_per_pixel, &cub->img->line_length, &cub->img->endian);
-	
-	x = -1;
-	while (++x < WIDTH)
+	cub->img->address = mlx_get_data_addr(img.img_ptr, &img.bits_per_pixel,
+			&img.line_length, &img.endian);
+	cub->img->x = -1;
+	while (++cub->img->x < WIDTH)
 	{
 		cub->ray.total_distance = 0;
-		populate_ray_struct(&cub->ray, &cub->player, x);
+		populate_ray_struct(&cub->ray, &cub->player, img.x);
 		get_step_and_distance_to_side(&cub->ray, &cub->player);
 		wall_orientation = perform_dda_algorithm(&cub->ray, cub);
 		get_draw_coordinates(&cub->ray);
 		get_wall_texture(&cub->ray, wall_orientation);
-		draw_textured_vertical_line(cub, cub->img, x);
+		draw_image_into_buffer(cub, &img, &cub->ray, &cub->textures);
 	}
-	mlx_put_image_to_window(cub->mlx_ptr, cub->win_ptr, cub->img->img_ptr, 0, 0);
-	mlx_destroy_image(cub->mlx_ptr, cub->img->img_ptr);
+	mlx_put_image_to_window(cub->mlx_ptr, cub->win_ptr, img.img_ptr, 0, 0);
+	mlx_destroy_image(cub->mlx_ptr, img.img_ptr);
 	return (0);
 }

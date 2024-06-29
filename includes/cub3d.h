@@ -72,6 +72,11 @@ typedef struct s_textures
 	void	*img_ptr_west;
 	int		floor_color;
 	int		ceiling_color;
+	int		color;
+	double	step;
+	double	tex_middle_offset;
+	double	tex_y;
+	int		wrap_adjustor;
 }	t_textures;
 
 typedef struct s_img
@@ -81,6 +86,7 @@ typedef struct s_img
 	int				bits_per_pixel;
 	int				line_length;
 	int				endian;
+	int				x;
 }					t_img;
 
 typedef struct s_txtr
@@ -101,7 +107,7 @@ typedef struct s_cub
 	t_txtr			*txtr;
 	t_textures		textures;
 	t_player		player;
-	t_ray			ray;	
+	t_ray			ray;
 }					t_cub;
 
 /* Parsing */

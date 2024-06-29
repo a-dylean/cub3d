@@ -84,10 +84,10 @@ void	parse_textures(char *line, t_cub *cub)
 		create_texture(cub, line);
 	else if (line[0] == 'S' && line[1] == ' ')
 		create_texture(cub, line);
-	else if (line[0] == 'F' && line[1] == ' ')
-		cub->textures.floor_color = ft_atoi(ft_split(line, ' ')[1]);
-	else if (line[0] == 'C' && line[1] == ' ')
-		cub->textures.ceiling_color = ft_atoi(ft_split(line, ' ')[1]);
+	// else if (line[0] == 'F' && line[1] == ' ')
+	// 	cub->textures.floor_color = ft_atoi(ft_split(line, ' ')[1]);
+	// else if (line[0] == 'C' && line[1] == ' ')
+	// 	cub->textures.ceiling_color = ft_atoi(ft_split(line, ' ')[1]);
 	// free(line);
 }
 
