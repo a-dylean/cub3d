@@ -19,6 +19,7 @@
 
 typedef struct s_player // everything is declared as double, math functions take them as parameters
 {
+	char letter;
 	double x;       /*initial x position*/
 	double y;       /*initial y position*/
 	double dir_x;   /*initial direction x*/
@@ -70,7 +71,7 @@ typedef struct s_cub
 /* Parsing */
 
 void parsing(char *path, t_cub *cub);
-void validate_map(char **map, int rows);
+void validate_map(char **map, int rows, t_player player);
 int empty_or_spaces_only(char *str);
 
 /* Utils */

@@ -79,9 +79,10 @@ int	first_and_last_char_check(char *str)
 
 int	length_check(char *row_to_compare, char *curr_row, int i)
 {
-	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row)) {
-        return 1;
-    }
+	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row))
+	{
+		return (1);
+	}
 	if (row_to_compare
 		&& (int)ft_strlen(curr_row) > (int)ft_strlen(row_to_compare)
 		&& i >= (int)ft_strlen(row_to_compare))
@@ -94,9 +95,10 @@ int	length_check(char *row_to_compare, char *curr_row, int i)
 
 int	spaces_check(char *row_to_compare, char *curr_row, int i)
 {
-	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row)) {
-        return 1;
-    }
+	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row))
+	{
+		return (1);
+	}
 	if ((row_to_compare && ft_isspace(row_to_compare[i])))
 	{
 		if (curr_row[i] != '1' && curr_row[i] != ' ')
@@ -122,14 +124,14 @@ int	check_conditions(char **arr, int rows)
 		j = 0;
 		while (curr_row[j])
 		{
-				if (row_on_top && !length_check(row_on_top, curr_row, j))
-                    return 0;
-				if (row_on_bottom && !length_check(row_on_bottom, curr_row, j)) 
-                    return (0);
-			    if (row_on_top && !spaces_check(row_on_top, curr_row, j))
-                    return 0;
-                if (row_on_bottom && !spaces_check(row_on_bottom, curr_row, j))
-				    return (0);
+			if (row_on_top && !length_check(row_on_top, curr_row, j))
+				return (0);
+			if (row_on_bottom && !length_check(row_on_bottom, curr_row, j))
+				return (0);
+			if (row_on_top && !spaces_check(row_on_top, curr_row, j))
+				return (0);
+			if (row_on_bottom && !spaces_check(row_on_bottom, curr_row, j))
+				return (0);
 			j++;
 		}
 		i++;
@@ -137,13 +139,46 @@ int	check_conditions(char **arr, int rows)
 	return (1);
 }
 
-void	validate_map(char **map, int height)
+int	check_player(char **arr, int rows, t_player player)
 {
-	int i;
+	int	i;
+	int	j;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (i < rows)
+	{
+		j = 0;
+		while (arr[i][j])
+		{
+			if (arr[i][j] == 'N' || arr[i][j] == 'O' || arr[i][j] == 'W'
+				|| arr[i][j] == 'E')
+			{
+				player.x = j;
+				player.y = i;
+				player.letter = arr[i][j];
+				count++;
+			}
+			if (count > 1)
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
+void	validate_map(char **map, int height, t_player player)
+{
+	int	i;
 
 	i = 0;
 	if (height == 0)
+	{
+		// free mem alloc for map here
 		exit_with_error("Empty map!");
+	}
 	while (i < height)
 	{
 		printf("LINE[%d]: %s\n", i, map[i]);
@@ -158,4 +193,6 @@ void	validate_map(char **map, int height)
 	}
 	if (!check_conditions(map, height))
 		exit_with_error("Invalid border");
+	if (!check_player(map, height, player))
+		exit_with_error("Invalid player position");
 }
