@@ -40,6 +40,9 @@ void	set_color_value(char *line, char **colors, char **nodes, t_cub *cub)
 	color = get_rgb_int(colors);
 	if (color == -1)
 	{
+		free_array(nodes);
+		free_array(colors);
+		free(line);
 		clean_up(cub, "Invalid color value");
 	}
 	if (line[0] == 'F')
@@ -55,7 +58,7 @@ void	set_color_value(char *line, char **colors, char **nodes, t_cub *cub)
 	// free_array(colors);
 }
 
-void	parse_color(char *line, t_cub *cub)
+void	parse_color(char *line, t_cub *cub, char** color_ids)
 {
 	char	**nodes;
 	char	**colors;
@@ -66,24 +69,31 @@ void	parse_color(char *line, t_cub *cub)
 	if (invalid_commas(line))
 	{
 		free(line);
+		free_array(color_ids);
 		clean_up(cub, "Invalid color declaration");
-	}	
+	}
 	temp = ft_strtrim(line, "FC");
 	nodes = ft_split(temp, ',');
 	free(temp);
 	if (!nodes)
 	{
 		free(line);
+		free_array(color_ids);
 		clean_up(cub, "Memory allocation failed");
-	}	
+	}
 	if (array_len(nodes) != 3)
 	{
 		free_array(nodes);
+		free_array(color_ids);
+		free(line);
 		clean_up(cub, "Invalid color declaration");
 	}
 	colors = ft_calloc(sizeof(char *) * array_len(nodes) + 1, sizeof(char *));
 	if (!colors)
+	{
+		free_array(color_ids);
 		clean_up(cub, "Memory allocation failed");
+	}
 	while (nodes[i])
 	{
 		temp = ft_strtrim(nodes[i], SPACES);
@@ -91,6 +101,7 @@ void	parse_color(char *line, t_cub *cub)
 		if (!colors[i])
 		{
 			free_array(nodes);
+			free_array(color_ids);
 			clean_up(cub, "Memory allocation failed");
 		}
 		free(temp);

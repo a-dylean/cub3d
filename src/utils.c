@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void clean_up(t_cub *cub, char* error)
+void	clean_up(t_cub *cub, char *error)
 {
 	if (cub->config_info)
 		free_array(cub->config_info);
@@ -13,7 +13,6 @@ void clean_up(t_cub *cub, char* error)
 
 void	free_and_exit(char *msg, t_cub *cub, char *new_line)
 {
-
 	if (ft_strlen(new_line) > 0)
 		free(new_line);
 	free_map(cub->map);
@@ -77,7 +76,7 @@ int	map_line(char *line)
 
 	i = 0;
 	if (line == NULL)
-        return 0;
+		return (0);
 	while (line[i])
 	{
 		if (line[i] == '1' || line[i] == ' ' || line[i] == '0' || line[i] == 'W'

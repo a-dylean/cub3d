@@ -25,9 +25,9 @@ int	array_len(char **array)
 	return (i);
 }
 
-void free_array(char **str)
+void	free_array(char **str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -37,4 +37,3 @@ void free_array(char **str)
 	}
 	free(str);
 }
-

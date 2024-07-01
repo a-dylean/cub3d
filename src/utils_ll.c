@@ -41,10 +41,10 @@ void	add_txtr_back(t_txtr **tokens, t_txtr *new_node)
 	}
 }
 
-int list_len(t_txtr *list)
+int	list_len(t_txtr *list)
 {
-	int i;
-	t_txtr *tmp;
+	int		i;
+	t_txtr	*tmp;
 
 	i = 0;
 	tmp = list;
@@ -56,10 +56,10 @@ int list_len(t_txtr *list)
 	return (i);
 }
 
-int has_duplicates(t_txtr *list)
+int	has_duplicates(t_txtr *list)
 {
-	t_txtr *tmp;
-	t_txtr *tmp2;
+	t_txtr	*tmp;
+	t_txtr	*tmp2;
 
 	tmp = list;
 	while (tmp)
@@ -76,9 +76,9 @@ int has_duplicates(t_txtr *list)
 	return (0);
 }
 
-void free_textures(t_txtr *txtr)
+void	free_textures(t_txtr *txtr)
 {
-	t_txtr *tmp;
+	t_txtr	*tmp;
 
 	while (txtr)
 	{

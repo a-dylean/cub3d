@@ -90,8 +90,7 @@ void	parse_textures_and_colors(char **nodes, char *line, t_cub *cub)
 	}
 	if (line && is_color(nodes[0]))
 	{
-		// free_array(nodes);
-		parse_color(line, cub);
+		parse_color(line, cub, nodes);
 	}
 }
 		
