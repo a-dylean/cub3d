@@ -1,16 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rotate.c                                           :+:      :+:    :+:   */
+/*   move_and_rotate.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 18:27:28 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/28 08:54:24 by jlabonde         ###   ########.fr       */
+/*   Created: 2024/07/01 12:02:05 by jlabonde          #+#    #+#             */
+/*   Updated: 2024/07/01 12:05:24 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
+
+void	move_player(t_cub *cub, double dir_x, double dir_y)
+{
+	double	speed;
+	int		new_y;
+	int		new_x;
+
+	speed = 0.064;
+	new_y = (int)(cub->player.y + dir_y * (speed));
+	new_x = (int)(cub->player.x + dir_x * (speed));
+	if (cub->map[new_y][(int)cub->player.x] != '1')
+		cub->player.y += dir_y * (speed);
+	if (cub->map[(int)cub->player.y][new_x] != '1')
+		cub->player.x += dir_x * (speed);
+}
 
 void	rotate_player(t_cub *cub, double rotation_speed)
 {

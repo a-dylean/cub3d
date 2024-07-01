@@ -6,44 +6,17 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/06/29 18:07:50 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:01:10 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-void	draw_pixel(t_img *img, int x, int y, int color)
-{
-	int	pos;
-
-	pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
-	*(int *)(img->address + pos) = color;
-}
-
-/*draw the pixels of the stripe as a vertical line*/
-void	draw_floor_and_ceiling(t_img *img, int draw_start,
-	int draw_end, t_textures *textures)
-{
-	int	i;
-
-	i = 0;
-	while (i <= draw_start)
-	{
-		draw_pixel(img, img->x, i, textures->ceiling_color);
-		i++;
-	}
-	while (draw_end <= HEIGHT)
-	{
-		draw_pixel(img, img->x, draw_end, textures->floor_color);
-		draw_end++;
-	}
-}
-
 /*Gets the x coordinates of the camera + calculates the
 ray position and direction, then saves which 'box' of
 the map we are in, then get the len of ray from one x
 or y-side to the next x or y-side */
-void	populate_ray_struct(t_ray *ray, t_player *player, int x)
+static void	populate_ray_struct(t_ray *ray, t_player *player, int x)
 {
 	ray->camera_x = 2 * x / (double)WIDTH - 1;
 	ray->dir_x = player->dir_y + player->plane_y * ray->camera_x;
@@ -56,7 +29,8 @@ void	populate_ray_struct(t_ray *ray, t_player *player, int x)
 
 /*Calculate distance projected on camera direction (Euclidean distance
 will give fisheye effect!)*/
-int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
+static int	calculate_distance_to_wall(t_ray *ray, t_player *player,
+	int east_west)
 {
 	if (east_west == 0)
 		ray->perp_wall_dist = (ray->map_x - player->x
@@ -70,7 +44,7 @@ int	calculate_distance_to_wall(t_ray *ray, t_player *player, int east_west)
 
 /*Digital Differential Analyzer - draws a straight line between 2 given 
 points and finds the closest wall that a ray intersects*/
-int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
+static int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 {
 	int	hit_east_west;
 
@@ -97,7 +71,7 @@ int	perform_dda_algorithm(t_ray *ray, t_cub *cub)
 /*calculates the initial step direction and distance to
 the first side (vertical or horizontal) that the ray will intersect
 Checks first if the ray moves to the left or right, then down or up.*/
-void	get_step_and_distance_to_side(t_ray *ray, t_player *player)
+static void	get_step_and_distance_to_side(t_ray *ray, t_player *player)
 {
 	if (ray->dir_x < 0)
 	{
@@ -118,123 +92,6 @@ void	get_step_and_distance_to_side(t_ray *ray, t_player *player)
 	{
 		ray->step_y = 1;
 		ray->side_dist_y = (ray->map_y + 1.0 - player->y) * ray->delta_dist_y;
-	}
-}
-
-/*Calculate height of line to draw on screen + get lowest
-and highest pixel to fill in stripe */
-void	get_draw_coordinates(t_ray *ray)
-{
-	int	line_height;
-
-	line_height = (int)(HEIGHT / ray->perp_wall_dist);
-	ray->draw_start = -line_height / 2 + HEIGHT / 2;
-	if (ray->draw_start < 0)
-		ray->draw_start = 0;
-	ray->draw_end = line_height / 2 + HEIGHT / 2;
-	if (ray->draw_end >= HEIGHT)
-		ray->draw_end = HEIGHT - 1;
-}
-
-void	get_wall_texture(t_ray *ray, int side)
-{
-	if (side == 0)
-	{
-		if (ray->dir_x < 0)
-			ray->face = WEST;
-		else
-			ray->face = EAST;
-	}
-	else
-	{
-		if (ray->dir_y < 0)
-			ray->face = NORTH;
-		else
-			ray->face = SOUTH;
-	}
-}
-
-/*Get the exact position on the wall where the ray hits, then ensure
-the value is within 0 and 1*/
-double	where_wall_hit(int face, t_cub *cub)
-{
-	double	wall_x;
-
-	if (face == EAST || face == WEST)
-		wall_x = cub->player.y + cub->ray.total_distance * cub->ray.dir_y;
-	else
-		wall_x = cub->player.x + cub->ray.total_distance * cub->ray.dir_x;
-	wall_x -= floor(wall_x);
-	return (wall_x);
-}
-
-int	where_x_on_texture(int face, t_cub *cub, double wall_x)
-{
-	int	texture_x;
-
-	texture_x = (int)(wall_x * (double)TEXTURE_WIDTH);
-	if ((face == EAST || face == WEST) && cub->ray.dir_x > 0)
-		texture_x = TEXTURE_WIDTH - texture_x - 1;
-	if ((face == NORTH || face == SOUTH) && cub->ray.dir_y < 0)
-		texture_x = TEXTURE_WIDTH - texture_x - 1;
-	return (texture_x);
-}
-
-int	get_pixel(void *img_ptr, int x, int y)
-{
-	char	*pixel;
-	int		color;
-	char	*data;
-	int		bpp;
-	int		size_line;
-	int		endian;
-
-	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-	if (x < 0 || y < 0)
-		return (0);
-	pixel = data + (y * size_line + x * (bpp / 8));
-	color = *(int *)pixel;
-	return (color);
-}
-
-void	*get_texture(t_cub *cub, int face)
-{
-	if (face == NORTH)
-		return (cub->textures.img_ptr_north);
-	else if (face == SOUTH)
-		return (cub->textures.img_ptr_south);
-	else if (face == EAST)
-		return (cub->textures.img_ptr_east);
-	else
-		return (cub->textures.img_ptr_west);
-}
-
-/*Renders a vertical slice of the wall, along with the ceiling and floor into 
-a buffer, by moving through the texture vertically and scaling
-it correctly depending on the player's distance to the wall*/
-void	draw_image_into_buffer(t_cub *cub, t_img *img,
-	t_ray *ray, t_textures *textures)
-{
-	int	y;
-
-	textures->step = 1.0f * TEXTURE_WIDTH / ((int)HEIGHT / ray->total_distance);
-	textures->middle_offset = (TEXTURE_HEIGHT / 2)
-		- (textures->step * (ray->draw_end - ray->draw_start) / 2);
-	if (textures->middle_offset < 0)
-		textures->middle_offset = 0;
-	else
-		textures->tex_y = textures->middle_offset;
-	y = ray->draw_start;
-	draw_floor_and_ceiling(img, ray->draw_start, ray->draw_end, textures);
-	while (y < ray->draw_end)
-	{
-		textures->wrap_adjustor = (int)textures->tex_y & (TEXTURE_HEIGHT - 1);
-		textures->tex_y += textures->step;
-		textures->color = get_pixel(get_texture(cub, ray->face),
-				where_x_on_texture(ray->face, cub,
-					where_wall_hit(ray->face, cub)), textures->wrap_adjustor);
-		draw_pixel(img, img->x, y, textures->color);
-		y++;
 	}
 }
 

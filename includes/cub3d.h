@@ -31,6 +31,7 @@
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
+#define FIELD_OF_VIEW 0.66
 /* Structures */
 
 typedef struct s_ray
@@ -134,15 +135,18 @@ t_txtr				*new_txtr(char *orientation, char *path);
 /* Raycasting */
 int 				cast_ray(t_cub *cub);
 
-/* Moves */
+/* Moves & Rotations*/
 void				move_player(t_cub *cub, double dir_x, double dir_y);
-void				move_forward(t_cub *cub);
-void				move_backward(t_cub *cub);
-void				move_left(t_cub *cub);
-void				move_right(t_cub *cub);
-
-/* Rotations */
 void				rotate_player(t_cub *cub, double rotation_speed);
 int					mouse_move(int x, int y, t_cub *cub);
+
+/* Drawing */
+void				draw_image_into_buffer(t_cub *cub, t_img *img,
+						t_ray *ray, t_textures *textures);
+void				*get_texture(t_cub *cub, int face);
+int					where_x_on_texture(int face, t_cub *cub, double wall_x);
+double				where_wall_hit(int face, t_cub *cub);
+void				get_draw_coordinates(t_ray *ray);
+void				get_wall_texture(t_ray *ray, int side);
 
 #endif
