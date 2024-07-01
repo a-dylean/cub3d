@@ -46,9 +46,7 @@ void	populate_map(t_cub *cub)
 	while (1)
 	{
 		if (!*content || i >= cub->map_height)
-		{
 			break ;
-		}
 		if (!found_non_empty && (*content == NULL || **content == '\0'
 				|| map_line(*content) == 0))
 		{
@@ -57,14 +55,10 @@ void	populate_map(t_cub *cub)
 		}
 		found_non_empty = 1;
 		if (*content == NULL || **content == '\0' || map_line(*content) == 0)
-		{
 			free_and_exit("Invalid map declaration", cub, *content);
-		}
 		cub->map[i] = ft_strdup(*content);
 		if (!cub->map[i])
-		{
 			free_and_exit("Memory allocation failed", cub, *content);
-		}
 		i++;
 		content++;
 	}

@@ -14,19 +14,6 @@ int	top_and_bottom_check(char *str)
 	return (1);
 }
 
-// int	ft_strspn(const char *s, const char *accept)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (s[i] != '\0')
-// 	{
-// 		if (ft_strchr(accept, s[i]) == 0)
-// 			break ;
-// 		++i;
-// 	}
-// 	return (i);
-// }
 
 int	empty_or_spaces_only(char *str)
 {
