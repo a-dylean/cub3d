@@ -28,20 +28,20 @@ int	load_textures(t_cub *cub) // replace the textures with the correct paths, af
 	int	pos[2];
 
 	cub->textures.img_ptr_north = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-brick-windows.xpm", &pos[0], &pos[1]);
+			"assets/Walls/b&w_bricks.xpm", &pos[0], &pos[1]);
 	if (!cub->textures.img_ptr_north)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
 			// implement proper freeing of all the previous allocations for images in case of error + exit program
 	cub->textures.img_ptr_south = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-Japanese-wall-setxcf.xpm", &pos[0], &pos[1]);
+			"assets/Walls/b&w_dots.xpm", &pos[0], &pos[1]);
 	if (!cub->textures.img_ptr_south)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
 	cub->textures.img_ptr_west = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-wooden-wall.xpm", &pos[0], &pos[1]);
+			"assets/Walls/b&w_squiggles.xpm", &pos[0], &pos[1]);
 	if (!cub->textures.img_ptr_south)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
 	cub->textures.img_ptr_east = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-wooden-windows.xpm", &pos[0], &pos[1]);
+			"assets/Walls/b&w_star.xpm", &pos[0], &pos[1]);
 	if (!cub->textures.img_ptr_east)
 		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
 	return (0);
@@ -64,7 +64,6 @@ int	main(int argc, char **argv)
 		load_textures(&cub);
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
-		mlx_hook(cub.win_ptr, MotionNotify, PointerMotionMask, &mouse_move, &cub);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}
