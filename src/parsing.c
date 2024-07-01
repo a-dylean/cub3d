@@ -165,9 +165,9 @@ int	count_lines_in_file(char *path)
 			break ;
 		count++;
 		free(line);
+		line = NULL;
 	}
 	close(fd);
-	// free(line);
 	return (count);
 }
 
@@ -186,17 +186,18 @@ int	read_file_into_memory(char *path, t_cub *cub)
 	if (!cub->config_info)
 		return (EXIT_FAILURE);
 	i = 0;
-	while (i < rows_count)
+	while (1)
 	{
 		cub->config_info[i] = get_next_line(fd);
+		if (!cub->config_info[i])
+			break;
 		line_len = ft_strlen(cub->config_info[i]);
 		if (line_len > 0 && cub->config_info[i][line_len - 1] == '\n')
 			cub->config_info[i][line_len - 1] = '\0';
 		i++;
 	}
 	cub->config_info[i] = NULL;
-	close(fd);
-	return (EXIT_SUCCESS);
+	return (close(fd), EXIT_SUCCESS);
 }
 
 void	parsing(char *path, t_cub *cub)
