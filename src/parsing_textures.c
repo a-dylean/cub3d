@@ -26,14 +26,14 @@ void	parse_texture(char **nodes, t_cub *cub)
 	if (array_len(nodes) != 2)
 	{
 		free_array(nodes);
-		exit_with_error("Invalid texture declaration");
+		clean_up(cub, "Invalid texture declaration");
 	}
 	id = nodes[0];
 	path = get_path(nodes[1]);
 	if (!path)
 	{
 		free_array(nodes);
-		exit_with_error("Invalid texture path");
+		clean_up(cub, "Invalid texture path");
 	}
 	add_txtr_back(&cub->txtr, new_txtr(id, path));
 }
@@ -41,9 +41,9 @@ void	parse_texture(char **nodes, t_cub *cub)
 void	textures_errors_check(t_cub *cub)
 {
 	if (!cub->txtr)
-		exit_with_error("No textures found");
+		clean_up(cub, "No textures found");
 	if (list_len(cub->txtr) != 4)
-		exit_with_error("Invalid number of textures");
+		clean_up(cub, "Invalid number of textures");
 	if (has_duplicates(cub->txtr))
-		exit_with_error("Duplicate texture definitions found");
+		clean_up(cub, "Duplicate texture definitions found");
 }

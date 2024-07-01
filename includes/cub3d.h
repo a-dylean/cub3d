@@ -71,7 +71,7 @@ typedef struct s_cub
 /* Parsing */
 
 void parsing(char *path, t_cub *cub);
-void validate_map(char **map, int rows, t_player player);
+void validate_map(char **map, int rows, t_player player, t_cub *cub);
 int empty_or_spaces_only(char *str);
 
 /* Utils */
@@ -90,6 +90,7 @@ int invalid_commas(char *line);
 void	init_empty_map(t_cub *cub);
 int	map_line(char *line);
 void free_textures(t_txtr *txtr);
+void clean_up(t_cub *cub, char* error);
 
 /* Textures */
 int is_texture(char *id);

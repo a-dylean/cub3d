@@ -31,13 +31,16 @@ void	set_color_value(char *line, char **colors, char **nodes, t_cub *cub)
 
 	if ((cub->textures.ceiling_color > 0 && line[0] == 'C')
 		|| (cub->textures.floor_color > 0 && line[0] == 'F'))
-		exit_with_error("Duplicate color definitions found");
-	color = get_rgb_int(colors);
-	if (color == -1)
 	{
 		free_array(nodes);
 		free_array(colors);
-		exit_with_error("Invalid color value");
+		free(line);
+		clean_up(cub, "Duplicate color definitions found");
+	}
+	color = get_rgb_int(colors);
+	if (color == -1)
+	{
+		clean_up(cub, "Invalid color value");
 	}
 	if (line[0] == 'F')
 		cub->textures.floor_color = color;
@@ -47,7 +50,7 @@ void	set_color_value(char *line, char **colors, char **nodes, t_cub *cub)
 	{
 		free_array(nodes);
 		free_array(colors);
-		exit_with_error("Invalid color identifier");
+		clean_up(cub, "Invalid color identifier");
 	}
 	// free_array(colors);
 }
@@ -61,25 +64,26 @@ void	parse_color(char *line, t_cub *cub)
 
 	i = 0;
 	if (invalid_commas(line))
-		exit_with_error("Invalid color declaration");
+	{
+		free(line);
+		clean_up(cub, "Invalid color declaration");
+	}	
 	temp = ft_strtrim(line, "FC");
 	nodes = ft_split(temp, ',');
 	free(temp);
 	if (!nodes)
-		exit_with_error("Memory allocation failed");
+	{
+		free(line);
+		clean_up(cub, "Memory allocation failed");
+	}	
 	if (array_len(nodes) != 3)
 	{
 		free_array(nodes);
-		exit_with_error("Invalid color declaration");
+		clean_up(cub, "Invalid color declaration");
 	}
-	colors = ft_calloc(sizeof(char *) * array_len(nodes) + 1, sizeof(char*));
+	colors = ft_calloc(sizeof(char *) * array_len(nodes) + 1, sizeof(char *));
 	if (!colors)
-		exit_with_error("Memory allocation failed");
-	// init colors array here like so:
-	// for (int j = 0; j < array_len(nodes); j++)
-	// {
-	// 	colors[j] = NULL;
-	// }
+		clean_up(cub, "Memory allocation failed");
 	while (nodes[i])
 	{
 		temp = ft_strtrim(nodes[i], SPACES);
@@ -87,7 +91,7 @@ void	parse_color(char *line, t_cub *cub)
 		if (!colors[i])
 		{
 			free_array(nodes);
-			exit_with_error("Memory allocation failed");
+			clean_up(cub, "Memory allocation failed");
 		}
 		free(temp);
 		i++;
@@ -100,6 +104,6 @@ void	parse_color(char *line, t_cub *cub)
 void	colors_errors_check(t_cub *cub)
 {
 	if (cub->textures.floor_color <= 0 || cub->textures.ceiling_color <= 0)
-		exit_with_error("Missing color(s) definition");
+		clean_up(cub, "Missing color(s) definition");
 	return ;
 }

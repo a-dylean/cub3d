@@ -1,5 +1,16 @@
 #include "cub3d.h"
 
+void clean_up(t_cub *cub, char* error)
+{
+	if (cub->config_info)
+		free_array(cub->config_info);
+	if (cub->map)
+		free_map(cub->map);
+	if (cub->txtr)
+		free_textures(cub->txtr);
+	exit_with_error(error);
+}
+
 void	free_and_exit(char *msg, t_cub *cub, char *new_line)
 {
 
@@ -11,7 +22,6 @@ void	free_and_exit(char *msg, t_cub *cub, char *new_line)
 
 void	exit_with_error(char *error)
 {
-	// add freeing of all the allocated memory?
 	printf("Error\n");
 	printf("%s\n", error);
 	exit(1);

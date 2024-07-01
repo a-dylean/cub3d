@@ -140,46 +140,42 @@ int	check_player(char **arr, int rows, t_player player)
 		while (arr[i][j])
 		{
 			if (arr[i][j] == 'N' || arr[i][j] == 'O' || arr[i][j] == 'W'
-				|| arr[i][j] == 'E')
+				|| arr[i][j] == 'E'|| arr[i][j] == 'S')
 			{
 				player.x = j;
 				player.y = i;
 				player.letter = arr[i][j];
 				count++;
 			}
-			if (count > 1)
-				return (0);
 			j++;
 		}
 		i++;
 	}
+	if (count != 1)
+		return (0);
 	return (1);
 }
 
-void	validate_map(char **map, int height, t_player player)
+void	validate_map(char **map, int height, t_player player, t_cub *cub)
 {
 	int	i;
 
 	i = 0;
 	if (height == 0)
-	{
-		// free mem alloc for map here
-		exit_with_error("Empty map!");
-	}
+		clean_up(cub, "Empty map!");
 	while (i < height)
 	{
-		printf("LINE[%d]: %s\n", i, map[i]);
 		if (i == 0 || i == height - 1)
 		{
 			if (!top_and_bottom_check(map[i]))
-				exit_with_error("Invalid top or bottom border");
+				clean_up(cub, "Invalid top or bottom border");
 		}
 		else if (!first_and_last_char_check(map[i]))
-			exit_with_error("Invalid border");
+			clean_up(cub, "Invalid border");
 		i++;
 	}
 	if (!check_conditions(map, height))
-		exit_with_error("Invalid border");
+		clean_up(cub, "Invalid border");
 	if (!check_player(map, height, player))
-		exit_with_error("Invalid player position");
+		clean_up(cub, "Invalid player position");
 }
