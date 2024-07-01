@@ -139,7 +139,7 @@ int	check_player(char **arr, int rows, t_player player)
 		j = 0;
 		while (arr[i][j])
 		{
-			if (arr[i][j] == 'N' || arr[i][j] == 'O' || arr[i][j] == 'W'
+			if (arr[i][j] == 'N' || arr[i][j] == 'W'
 				|| arr[i][j] == 'E'|| arr[i][j] == 'S')
 			{
 				player.x = j;

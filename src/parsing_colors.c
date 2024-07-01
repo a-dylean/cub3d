@@ -4,7 +4,7 @@ int	is_color(char *id)
 {
 	if (!id)
 		return (0);
-	return (ft_strcmp(id, "F") == 0 || ft_strcmp(id, "C") == 0);
+	return (ft_strncmp(id, "F", 2) == 0 || ft_strncmp(id, "C", 2) == 0);
 }
 
 int	get_rgb_int(char **colors)
@@ -114,6 +114,7 @@ void	parse_color(char *line, t_cub *cub, char** color_ids)
 }
 void	colors_errors_check(t_cub *cub)
 {
+	//change the condition here, because color can be 0
 	if (cub->textures.floor_color <= 0 || cub->textures.ceiling_color <= 0)
 		clean_up(cub, "Missing color(s) definition");
 	return ;

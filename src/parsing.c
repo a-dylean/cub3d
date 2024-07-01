@@ -106,6 +106,7 @@ void	parse_config(t_cub *cub)
 	{
 		if (!*content)
 			break ;
+		//fix possible invalid read here
 		trimmed_line = ft_strtrim(*content, SPACES);
 		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
 		{
