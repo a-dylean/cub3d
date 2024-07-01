@@ -80,6 +80,28 @@ void	parse_map(t_cub *cub)
 	validate_map(cub->map, cub->map_height);
 }
 
+void	parse_textures_and_colors(char **content, char **nodes, char *line,
+		t_cub *cub)
+{
+	if (!nodes)
+	{
+		free(line);
+		free_and_exit("Memory allocation failed", cub, *content);
+	}	
+	if (line && !is_texture(nodes[0]) && !is_color(nodes[0]))
+	{
+		free(line);
+		free_and_exit("Invalid element found in config", cub, *content);
+	}	
+	if (line && is_texture(nodes[0]))
+	{
+		free(line);
+		parse_texture(nodes, cub);
+	}
+	if (line && is_color(nodes[0]))
+		parse_color(line, cub);
+}
+
 void	parse_config(t_cub *cub)
 {
 	char	**nodes;
@@ -99,19 +121,15 @@ void	parse_config(t_cub *cub)
 			continue ;
 		}
 		if (map_line(*content))
+		{
+			free(trimmed_line);
 			break ;
+		}
 		nodes = ft_split(trimmed_line, ' ');
-		if (!nodes)
-			free_and_exit("Memory allocation failed", cub, *content);
-		if (trimmed_line && !is_texture(nodes[0]) && !is_color(nodes[0]))
-			free_and_exit("Invalid element found in config", cub, *content);
-		if (trimmed_line && is_texture(nodes[0]))
-			parse_texture(nodes, cub);
-		if (trimmed_line && is_color(nodes[0]))
-			parse_color(trimmed_line, cub);
+		parse_textures_and_colors(content, nodes, trimmed_line, cub);
+		free_array(nodes);
 		content++;
 	}
-	free_array(nodes);
 }
 
 void	print_parsing(t_cub *cub)
@@ -192,7 +210,6 @@ void	parsing(char *path, t_cub *cub)
 		exit_with_error("Invalid file format");
 	if (read_file_into_memory(path, cub))
 		exit_with_error("Error while reading a file");
-
 	parse_config(cub);
 	cub->map_height = get_map_height(cub->config_info);
 	init_empty_map(cub);
@@ -201,4 +218,5 @@ void	parsing(char *path, t_cub *cub)
 	textures_errors_check(cub);
 	colors_errors_check(cub);
 	// print_parsing(cub);
+	free_array(cub->config_info);
 }

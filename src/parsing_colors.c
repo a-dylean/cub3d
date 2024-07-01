@@ -95,6 +95,7 @@ void	parse_color(char *line, t_cub *cub)
 	set_color_value(line, colors, nodes, cub);
 	free_array(colors);
 	free_array(nodes);
+	free(line);
 }
 void	colors_errors_check(t_cub *cub)
 {

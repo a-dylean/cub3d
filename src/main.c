@@ -68,7 +68,8 @@ int	main(int argc, char **argv)
 		// cub.mlx_ptr = mlx_init();
 		// if (!cub.mlx_ptr)
 		// 	return (1);
-		// cub.win_ptr = mlx_new_window(cub.mlx_ptr, 800, 600, "cub3d"); // replace 800 and 600 with the calculated win height and length
+		// cub.win_ptr = mlx_new_window(cub.mlx_ptr, 800, 600, "cub3d");
+			// replace 800 and 600 with the calculated win height and length
 		// if (!cub.win_ptr)
 		// 	return (free(cub.mlx_ptr), 1);
 		// load_textures(&cub);
@@ -77,14 +78,13 @@ int	main(int argc, char **argv)
 		// mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
 		// mlx_hook(cub.win_ptr, KeyRelease, KeyReleaseMask, &key_press, &cub);
 		// mlx_loop(cub.mlx_ptr);
+		free_map(cub.map);
+		free_textures(cub.txtr);
+		// free images
 	}
 	else
 	{
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
 	}
-	free_map(cub.map);
-	free_textures(cub.txtr);
-	// free images
-
 	return (0);
 }
