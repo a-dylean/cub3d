@@ -69,8 +69,6 @@ int	main(int argc, char **argv)
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
-		free_map(cub.map);
-		free_textures(cub.txtr);
 	}
 	else
 	{

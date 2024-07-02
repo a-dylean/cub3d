@@ -8,7 +8,8 @@ void	clean_up(t_cub *cub, char *error)
 		free_map(cub->map);
 	if (cub->txtr)
 		free_textures(cub->txtr);
-	exit_with_error(error);
+	if (error)
+		exit_with_error(error);
 }
 
 void	free_and_exit(char *msg, t_cub *cub, char *new_line)
@@ -54,7 +55,7 @@ int	str_is_numeric(char *str)
 	return (1);
 }
 
-int	invalid_commas(char *line)
+void	invalid_commas(char *line, char **color_ids, t_cub *cub)
 {
 	int	i;
 	int	commas;
@@ -67,7 +68,13 @@ int	invalid_commas(char *line)
 			commas++;
 		i++;
 	}
-	return (commas != 2);
+	if (commas != 2)
+	{
+		free_array(color_ids);
+		free(line);
+		clean_up(cub, "Invalid color declaration");
+	}
+	return ;
 }
 
 int	map_line(char *line)

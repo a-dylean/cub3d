@@ -134,7 +134,7 @@ void free_array(char **str);
 int list_len(t_txtr *list);
 int has_duplicates(t_txtr *list);
 int str_is_numeric(char *str);
-int invalid_commas(char *line);
+void invalid_commas(char *line, char **color_ids, t_cub *cub);
 void	init_empty_map(t_cub *cub);
 int	map_line(char *line);
 void free_textures(t_txtr *txtr);
