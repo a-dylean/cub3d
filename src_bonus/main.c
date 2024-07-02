@@ -72,8 +72,5 @@ int	main(int argc, char **argv)
 	{
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
 	}
-	free_map(cub.map);
-	// free_textures(cub.textures);
-	// free images
 	return (0);
 }
