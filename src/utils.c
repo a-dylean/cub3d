@@ -8,7 +8,8 @@ void	clean_up(t_cub *cub, char *error)
 		free_map(cub->map);
 	if (cub->txtr)
 		free_textures(cub->txtr);
-	exit_with_error(error);
+	if (error)
+		exit_with_error(error);
 }
 
 void	free_and_exit(char *msg, t_cub *cub, char *new_line)

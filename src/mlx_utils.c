@@ -14,6 +14,8 @@
 
 int	destroyer(t_cub *cub)
 {
+	free_map(cub->map);
+	free_textures(cub->txtr);
 	mlx_destroy_image(cub->mlx_ptr, cub->textures.img_ptr_north);
 	mlx_destroy_image(cub->mlx_ptr, cub->textures.img_ptr_south);
 	mlx_destroy_image(cub->mlx_ptr, cub->textures.img_ptr_east);
