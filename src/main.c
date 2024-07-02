@@ -2,8 +2,9 @@
 
 void	init_struct(t_cub *cub, char *filename)
 {
+	(void)filename;
 	cub->map = NULL;
-	cub->map_height = get_map_height(filename);
+	cub->map_height = 0;
 	cub->map_width = 0;
 	cub->txtr = NULL;
 	cub->mlx_ptr = NULL;
@@ -21,6 +22,8 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->player.plane_x = 0;
 	cub->player.plane_y = 0;
 	cub->player.delta_camera_x = 0;
+	cub->textures.floor_color = -1;
+	cub->textures.ceiling_color = -1;
 }
 
 int	load_textures(t_cub *cub) // replace the textures with the correct paths, after parsing
@@ -53,7 +56,7 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 	{
 		init_struct(&cub, argv[1]);
-		parse_input(argv[1], &cub);
+		parsing(argv[1], &cub);
 		set_player(&cub, &cub.player);
 		cub.mlx_ptr = mlx_init();
 		if (!cub.mlx_ptr)
@@ -66,13 +69,12 @@ int	main(int argc, char **argv)
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
+		free_map(cub.map);
+		free_textures(cub.txtr);
 	}
 	else
 	{
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
 	}
-	free_map(cub.map);
-	// free_textures(cub.textures);
-	// free images
 	return (0);
 }

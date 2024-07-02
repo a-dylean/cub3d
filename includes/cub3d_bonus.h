@@ -32,6 +32,7 @@
 #define LEFT 2
 #define RIGHT 3
 #define FIELD_OF_VIEW 0.66
+#define SPACES " \t\n\v\f\r"
 /* Structures */
 
 typedef struct s_ray

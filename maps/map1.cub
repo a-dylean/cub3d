@@ -1,7 +1,7 @@
-NO assets/Walls/diamond.xpm
-SO assets/Walls/emerald.xpm
-WE assets/Walls/light_brick.xpm
-EA assets/Walls/light_gravel.xpm
+NO assets/Walls/pink.xpm
+SO assets/Walls/light_blue.xpm
+WE assets/Walls/yellow.xpm
+EA assets/Walls/blue.xpm
 
 F 220,100,0
 C 225,30,0

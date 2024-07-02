@@ -1,5 +1,5 @@
-NAME = cub3d
-NAME_BONUS = cub3d_bonus
+NAME = cub3D
+NAME_BONUS = cub3D_bonus
 CC = cc -g
 CFLAGS = -Wall -Wextra -Werror -fPIC
 INCLUDES = -I includes -I libft -I mlx
