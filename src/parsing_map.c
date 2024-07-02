@@ -98,26 +98,20 @@ int	check_conditions(char **arr, int rows)
 {
 	int		i;
 	int		j;
-	char	*curr_row;
-	char	*row_on_top;
-	char	*row_on_bottom;
 
 	i = 1;
 	while (i < rows)
 	{
-		curr_row = arr[i];
-		row_on_top = arr[i - 1];
-		row_on_bottom = arr[i + 1];
 		j = 0;
-		while (curr_row[j])
+		while (arr[i][j])
 		{
-			if (row_on_top && !length_check(row_on_top, curr_row, j))
+			if (arr[i - 1] && !length_check(arr[i - 1], arr[i], j))
 				return (0);
-			if (row_on_bottom && !length_check(row_on_bottom, curr_row, j))
+			if (arr[i + 1] && !length_check(arr[i + 1], arr[i], j))
 				return (0);
-			if (row_on_top && !spaces_check(row_on_top, curr_row, j))
+			if (arr[i - 1] && !spaces_check(arr[i - 1], arr[i], j))
 				return (0);
-			if (row_on_bottom && !spaces_check(row_on_bottom, curr_row, j))
+			if (arr[i + 1] && !spaces_check(arr[i + 1], arr[i], j))
 				return (0);
 			j++;
 		}
