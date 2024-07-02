@@ -106,17 +106,13 @@ void	parse_config(t_cub *cub)
 	{
 		if (!*content)
 			break ;
-		//fix possible invalid read here
+		if (map_line(*content) && !empty_or_spaces_only(*content))
+			break ;
 		trimmed_line = ft_strtrim(*content, SPACES);
 		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
 		{
 			free(trimmed_line), content++;
 			continue ;
-		}
-		if (map_line(*content))
-		{
-			free(trimmed_line);
-			break ;
 		}
 		nodes = ft_split(trimmed_line, ' ');
 		parse_textures_and_colors(nodes, trimmed_line, cub);
