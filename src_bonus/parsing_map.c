@@ -134,12 +134,7 @@ int	check_player(char **arr, int rows)
 		{
 			if (arr[i][j] == 'N' || arr[i][j] == 'W' || arr[i][j] == 'E'
 				|| arr[i][j] == 'S')
-			{
-				player.x = j;
-				player.y = i;
-				player.letter = arr[i][j];
 				count++;
-			}
 			j++;
 		}
 		i++;

@@ -58,7 +58,6 @@ typedef struct s_ray
 
 typedef struct s_player // everything is declared as double, math functions take them as parameters
 {
-	char letter;
 	double x;       /*initial x position*/
 	double y;       /*initial y position*/
 	double dir_x;   /*initial direction x*/
