@@ -1,31 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atonkopi <atonkopi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/02 14:57:41 by atonkopi          #+#    #+#             */
+/*   Updated: 2024/07/02 15:28:04 by atonkopi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
-
-void	clean_up(t_cub *cub, char *error)
-{
-	if (cub->config_info)
-		free_array(cub->config_info);
-	if (cub->map)
-		free_map(cub->map);
-	if (cub->txtr)
-		free_textures(cub->txtr);
-	if (error)
-		exit_with_error(error);
-}
-
-void	free_and_exit(char *msg, t_cub *cub, char *new_line)
-{
-	if (ft_strlen(new_line) > 0)
-		free(new_line);
-	free_map(cub->map);
-	exit_with_error(msg);
-}
-
-void	exit_with_error(char *error)
-{
-	printf("Error\n");
-	printf("%s\n", error);
-	exit(1);
-}
 
 int	valid_format(char *filename)
 {
@@ -55,31 +40,9 @@ int	str_is_numeric(char *str)
 	return (1);
 }
 
-void	invalid_commas(char *line, char **color_ids, t_cub *cub)
-{
-	int	i;
-	int	commas;
-
-	i = 0;
-	commas = 0;
-	while (line[i])
-	{
-		if (line[i] == ',')
-			commas++;
-		i++;
-	}
-	if (commas != 2)
-	{
-		free_array(color_ids);
-		free(line);
-		clean_up(cub, "Invalid color declaration");
-	}
-	return ;
-}
-
 int	map_line(char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (line == NULL)

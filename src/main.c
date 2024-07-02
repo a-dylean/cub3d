@@ -1,15 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atonkopi <atonkopi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/02 14:56:18 by atonkopi          #+#    #+#             */
+/*   Updated: 2024/07/02 15:11:25 by atonkopi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
-void	init_struct(t_cub *cub, char *filename)
+void	init_struct(t_cub *cub)
 {
-	(void)filename;
 	cub->map = NULL;
 	cub->map_height = 0;
 	cub->txtr = NULL;
 	cub->mlx_ptr = NULL;
 	cub->win_ptr = NULL;
-	// cub->win_height = 0;
-	// cub->win_width = 0;
 	cub->textures.img_ptr_north = NULL;
 	cub->textures.img_ptr_south = NULL;
 	cub->textures.img_ptr_east = NULL;
@@ -31,7 +40,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 2)
 	{
-		init_struct(&cub, argv[1]);
+		init_struct(&cub);
 		parsing(argv[1], &cub);
 		set_player(&cub, &cub.player);
 		cub.mlx_ptr = mlx_init();
@@ -47,8 +56,6 @@ int	main(int argc, char **argv)
 		mlx_loop(cub.mlx_ptr);
 	}
 	else
-	{
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
-	}
 	return (0);
 }

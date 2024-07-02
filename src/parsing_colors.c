@@ -1,29 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_colors.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atonkopi <atonkopi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/02 14:56:27 by atonkopi          #+#    #+#             */
+/*   Updated: 2024/07/02 15:07:32 by atonkopi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
-
-int	is_color(char *id)
-{
-	if (!id)
-		return (0);
-	return (ft_strncmp(id, "F", 2) == 0 || ft_strncmp(id, "C", 2) == 0);
-}
-
-int	get_rgb_int(char **colors)
-{
-	int	int_colors[3];
-	int	i;
-
-	i = 0;
-	while (i < 3)
-	{
-		if (!str_is_numeric(colors[i]))
-			return (-1);
-		int_colors[i] = ft_atoi(colors[i]);
-		if (int_colors[i] < 0 || int_colors[i] > 255)
-			return (-1);
-		i++;
-	}
-	return ((int_colors[0] << 16) | (int_colors[1] << 8) | int_colors[2]);
-}
 
 void	duplicates_check(char *line, char **colors, char **color_ids,
 		t_cub *cub)
@@ -121,11 +108,4 @@ void	parse_color(char *line, t_cub *cub, char **color_ids)
 	free_array(nodes);
 	set_color_value(line, colors, color_ids, cub);
 	free(line);
-}
-
-void	colors_errors_check(t_cub *cub)
-{
-	if (cub->textures.floor_color < 0 || cub->textures.ceiling_color < 0)
-		clean_up(cub, "Missing color(s) definition");
-	return ;
 }
