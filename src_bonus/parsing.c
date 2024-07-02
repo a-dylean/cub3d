@@ -1,42 +1,26 @@
 #include "../includes/cub3d_bonus.h"
 
-int	get_map_height(char *filename)
+int	get_map_height(char **config)
 {
-	int		fd;
-	int		height;
-	char	*new_line;
+	int	i;
+	int	height;
 
+	i = 0;
 	height = 0;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		exit_with_error("No such file or directory");
-	while (1)
+	while (config[i])
 	{
-		new_line = get_next_line(fd);
-		if (!new_line)
-			break ;
-		while (new_line && (new_line[0] == '1' || new_line[0] == ' '))
-		{
+		if (map_line(config[i]) && !empty_or_spaces_only(config[i]))
 			height++;
-			free(new_line);
-			new_line = get_next_line(fd);
-			if (!new_line)
-				break ;
-		}
-		if (new_line)
-			free(new_line);
+		i++;
 	}
-	close(fd);
 	return (height);
 }
 
-static void	init_empty_map(t_cub *cub)
+void	init_empty_map(t_cub *cub)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
 	cub->map = malloc(sizeof(char *) * (cub->map_height + 1));
 	if (!cub->map)
 	{
@@ -50,85 +34,183 @@ static void	init_empty_map(t_cub *cub)
 	}
 }
 
-void	populate_map(char *line, t_cub *cub, int *i)
+void	populate_map(t_cub *cub)
 {
-	cub->map[*i] = ft_strdup(line);
-	if (!cub->map[*i])
-		free_and_exit("Memory allocation failed", cub, line);
-	// cub->map_width = (int)ft_strlen(line);
-	free(line);
-	(*i)++;
-}
+	int		i;
+	char	**arr;
+	int		flag;
 
-void	create_texture(t_cub *cub, char *line)
-{
-	char	*orientation;
-	char	*path;
-
-	orientation = ft_split(line, ' ')[0];
-	path = ft_split(line, ' ')[1];
-	add_txtr_back(&cub->txtr, new_txtr(orientation, path));
-	free(orientation);
-	free(path);
-}
-
-void	parse_textures(char *line, t_cub *cub)
-{
-	if (line[0] == 'N' && line[1] == 'O')
-		create_texture(cub, line);
-	else if (line[0] == 'S' && line[1] == 'O')
-		create_texture(cub, line);
-	else if (line[0] == 'W' && line[1] == 'E')
-		create_texture(cub, line);
-	else if (line[0] == 'E' && line[1] == 'A')
-		create_texture(cub, line);
-	else if (line[0] == 'S' && line[1] == ' ')
-		create_texture(cub, line);
-	else if (line[0] == 'F' && line[1] == ' ')
-		cub->textures.floor_color = ft_atoi(ft_split(line, ' ')[1]);
-	else if (line[0] == 'C' && line[1] == ' ')
-		cub->textures.ceiling_color = ft_atoi(ft_split(line, ' ')[1]);
-	free(line);
-}
-
-void	parse_input(char *path, t_cub *cub)
-{
-	int fd;
-	char *new_line;
-	int i = 0;
-
-	if (!valid_format(path))
-		exit_with_error("Invalid file format");
-	fd = open(path, O_RDONLY);
-	if (fd < 0)
-		exit_with_error("No such file or directory");
-	init_empty_map(cub);
+	i = 0;
+	arr = cub->config_info;
+	flag = 0;
 	while (1)
 	{
-		new_line = get_next_line(fd);
-		if (!new_line)
+		if (!*arr || i >= cub->map_height)
 			break ;
-		if (new_line && new_line[0] != '1' && new_line[0] != ' ')
+		if (!flag && (*arr == NULL || **arr == '\0' || map_line(*arr) == 0))
 		{
-			parse_textures(new_line, cub);
+			arr++;
+			continue ;
 		}
-		if (new_line && (new_line[0] == '1' || new_line[0] == ' '))
-			populate_map(new_line, cub, &i);
+		flag = 1;
+		if (*arr == NULL || **arr == '\0' || map_line(*arr) == 0)
+			clean_up(cub, "Invalid map declaration");
+		cub->map[i] = ft_strdup(*arr);
+		if (!cub->map[i])
+			clean_up(cub, "Memory allocation failed");
+		i++;
+		arr++;
 	}
-	//for testing purposes
-	// for (int i = 0; i < cub->map_height; i++)
-	// {
-	// 	printf("%s", cub->map[i]);
-	// }
-	// printf("\n");
-	// printf("Floor color: %d\n", cub->textures.floor_color);
-	// printf("Ceiling color: %d\n", cub->textures.ceiling_color);
-	// for (int j = 0; cub->txtr; j++)
-	// {
-	// 	printf("Orientation: %s\n", cub->txtr->orientation);
-	// 	printf("Path: %s\n", cub->txtr->path);
-	// 	cub->txtr = cub->txtr->next;
-	// }
-	close(fd);
 }
 
+void	parse_map(t_cub *cub)
+{
+	populate_map(cub);
+	validate_map(cub->map, cub->map_height, cub->player, cub);
+}
+
+void	parse_textures_and_colors(char **nodes, char *line, t_cub *cub)
+{
+	if (!nodes)
+	{
+		free(line);
+		free_array(nodes);
+		clean_up(cub, "Memory allocation failed");
+	}
+	if (line && !is_texture(nodes[0]) && !is_color(nodes[0]))
+	{
+		free(line);
+		free_array(nodes);
+		clean_up(cub, "Invalid element found in config");
+	}
+	if (line && is_texture(nodes[0]))
+	{
+		free(line);
+		parse_texture(nodes, cub);
+	}
+	if (line && is_color(nodes[0]))
+	{
+		parse_color(line, cub, nodes);
+	}
+}
+		
+
+void	parse_config(t_cub *cub)
+{
+	char	**nodes;
+	char	*trimmed_line;
+	char	**content;
+
+	content = cub->config_info;
+	while (1)
+	{
+		if (!*content)
+			break ;
+		//fix possible invalid read here
+		trimmed_line = ft_strtrim(*content, SPACES);
+		if (!trimmed_line || ft_strlen(trimmed_line) == 0)
+		{
+			free(trimmed_line), content++;
+			continue ;
+		}
+		if (map_line(*content))
+		{
+			free(trimmed_line);
+			break ;
+		}
+		nodes = ft_split(trimmed_line, ' ');
+		parse_textures_and_colors(nodes, trimmed_line, cub);
+		free_array(nodes);
+		content++;
+	}
+}
+
+void	print_parsing(t_cub *cub)
+{
+	t_txtr	*current;
+
+	printf("Map height: %d\n", cub->map_height);
+	printf("Map width: %d\n", cub->map_width);
+	printf("Map:\n");
+	for (int i = 0; i < cub->map_height; i++)
+	{
+		printf("map line[%d]: %s\n", i, cub->map[i]);
+	}
+	printf("Floor color: %d\n", cub->textures.floor_color);
+	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
+	current = cub->txtr;
+	while (current)
+	{
+		printf("Texture orientation: %s\n", current->orientation);
+		printf("Texture path: %s\n", current->path);
+		current = current->next;
+	}
+}
+
+int	count_lines_in_file(char *path)
+{
+	int		fd;
+	int		count;
+	char	*line;
+
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (perror(path), EXIT_FAILURE);
+	count = 0;
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		count++;
+		free(line);
+		line = NULL;
+	}
+	close(fd);
+	return (count);
+}
+
+int	read_file_into_memory(char *path, t_cub *cub)
+{
+	int	fd;
+	int	i;
+	int	line_len;
+	int	rows_count;
+
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (perror(path), EXIT_FAILURE);
+	rows_count = count_lines_in_file(path);
+	cub->config_info = (char **)malloc(sizeof(char *) * (rows_count + 1));
+	if (!cub->config_info)
+		return (EXIT_FAILURE);
+	i = 0;
+	while (1)
+	{
+		cub->config_info[i] = get_next_line(fd);
+		if (!cub->config_info[i])
+			break ;
+		line_len = ft_strlen(cub->config_info[i]);
+		if (line_len > 0 && cub->config_info[i][line_len - 1] == '\n')
+			cub->config_info[i][line_len - 1] = '\0';
+		i++;
+	}
+	cub->config_info[i] = NULL;
+	return (close(fd), EXIT_SUCCESS);
+}
+
+void	parsing(char *path, t_cub *cub)
+{
+	if (!valid_format(path))
+		exit_with_error("Invalid file format");
+	if (read_file_into_memory(path, cub))
+		exit_with_error("Error while reading a file");
+	parse_config(cub);
+	cub->map_height = get_map_height(cub->config_info);
+	init_empty_map(cub);
+	parse_map(cub);
+	textures_errors_check(cub);
+	colors_errors_check(cub);
+	// print_parsing(cub);
+	free_array(cub->config_info);
+}

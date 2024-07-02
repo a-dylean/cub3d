@@ -6,13 +6,13 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:52:26 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/01 12:00:11 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:00:48 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-static void	draw_pixel(t_img *img, int x, int y, int color)
+void	draw_pixel(t_img *img, int x, int y, int color)
 {
 	int	pos;
 
