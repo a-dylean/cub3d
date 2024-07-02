@@ -5,7 +5,6 @@ void	init_struct(t_cub *cub, char *filename)
 	(void)filename;
 	cub->map = NULL;
 	cub->map_height = 0;
-	cub->map_width = 0;
 	cub->txtr = NULL;
 	cub->mlx_ptr = NULL;
 	cub->win_ptr = NULL;

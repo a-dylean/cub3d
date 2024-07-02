@@ -66,7 +66,7 @@ void	populate_map(t_cub *cub)
 void	parse_map(t_cub *cub)
 {
 	populate_map(cub);
-	validate_map(cub->map, cub->map_height, cub->player, cub);
+	validate_map(cub->map, cub->map_height, cub);
 }
 
 void	parse_textures_and_colors(char **nodes, char *line, t_cub *cub)

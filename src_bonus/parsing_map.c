@@ -1,4 +1,4 @@
-#include "../includes/cub3d_bonus.h"
+#include "cub3d.h"
 
 int	top_and_bottom_check(char *str)
 {
@@ -13,7 +13,6 @@ int	top_and_bottom_check(char *str)
 	}
 	return (1);
 }
-
 
 int	empty_or_spaces_only(char *str)
 {
@@ -96,28 +95,22 @@ int	spaces_check(char *row_to_compare, char *curr_row, int i)
 
 int	check_conditions(char **arr, int rows)
 {
-	int		i;
-	int		j;
-	char	*curr_row;
-	char	*row_on_top;
-	char	*row_on_bottom;
+	int	i;
+	int	j;
 
 	i = 1;
 	while (i < rows)
 	{
-		curr_row = arr[i];
-		row_on_top = arr[i - 1];
-		row_on_bottom = arr[i + 1];
 		j = 0;
-		while (curr_row[j])
+		while (arr[i][j])
 		{
-			if (row_on_top && !length_check(row_on_top, curr_row, j))
+			if (arr[i - 1] && !length_check(arr[i - 1], arr[i], j))
 				return (0);
-			if (row_on_bottom && !length_check(row_on_bottom, curr_row, j))
+			if (arr[i + 1] && !length_check(arr[i + 1], arr[i], j))
 				return (0);
-			if (row_on_top && !spaces_check(row_on_top, curr_row, j))
+			if (arr[i - 1] && !spaces_check(arr[i - 1], arr[i], j))
 				return (0);
-			if (row_on_bottom && !spaces_check(row_on_bottom, curr_row, j))
+			if (arr[i + 1] && !spaces_check(arr[i + 1], arr[i], j))
 				return (0);
 			j++;
 		}
@@ -126,7 +119,7 @@ int	check_conditions(char **arr, int rows)
 	return (1);
 }
 
-int	check_player(char **arr, int rows, t_player player)
+int	check_player(char **arr, int rows)
 {
 	int	i;
 	int	j;
@@ -139,8 +132,8 @@ int	check_player(char **arr, int rows, t_player player)
 		j = 0;
 		while (arr[i][j])
 		{
-			if (arr[i][j] == 'N' || arr[i][j] == 'W'
-				|| arr[i][j] == 'E'|| arr[i][j] == 'S')
+			if (arr[i][j] == 'N' || arr[i][j] == 'W' || arr[i][j] == 'E'
+				|| arr[i][j] == 'S')
 			{
 				player.x = j;
 				player.y = i;
@@ -156,7 +149,7 @@ int	check_player(char **arr, int rows, t_player player)
 	return (1);
 }
 
-void	validate_map(char **map, int height, t_player player, t_cub *cub)
+void	validate_map(char **map, int height, t_cub *cub)
 {
 	int	i;
 
@@ -176,6 +169,6 @@ void	validate_map(char **map, int height, t_player player, t_cub *cub)
 	}
 	if (!check_conditions(map, height))
 		clean_up(cub, "Invalid border");
-	if (!check_player(map, height, player))
+	if (!check_player(map, height))
 		clean_up(cub, "Invalid player position");
 }

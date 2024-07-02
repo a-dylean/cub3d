@@ -58,7 +58,7 @@ typedef struct s_ray
 
 typedef struct s_player // everything is declared as double, math functions take them as parameters
 {
-	char letter;
+	char position;
 	double x;       /*initial x position*/
 	double y;       /*initial y position*/
 	double dir_x;   /*initial direction x*/
@@ -105,7 +105,6 @@ typedef struct s_cub
 	char **config_info;
 	char			**map;
 	int				map_height;
-	int				map_width;
 	t_img			*img;
 	void			*mlx_ptr;
 	void			*win_ptr;
@@ -118,7 +117,7 @@ typedef struct s_cub
 /* Parsing */
 
 void parsing(char *path, t_cub *cub);
-void validate_map(char **map, int rows, t_player player, t_cub *cub);
+void validate_map(char **map, int rows, t_cub *cub);
 int empty_or_spaces_only(char *str);
 void				set_player(t_cub *cub, t_player *player);
 

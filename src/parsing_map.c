@@ -119,7 +119,7 @@ int	check_conditions(char **arr, int rows)
 	return (1);
 }
 
-int	check_player(char **arr, int rows, t_player player)
+int	check_player(char **arr, int rows)
 {
 	int	i;
 	int	j;
@@ -134,12 +134,7 @@ int	check_player(char **arr, int rows, t_player player)
 		{
 			if (arr[i][j] == 'N' || arr[i][j] == 'W' || arr[i][j] == 'E'
 				|| arr[i][j] == 'S')
-			{
-				player.x = j;
-				player.y = i;
-				player.letter = arr[i][j];
 				count++;
-			}
 			j++;
 		}
 		i++;
@@ -149,7 +144,7 @@ int	check_player(char **arr, int rows, t_player player)
 	return (1);
 }
 
-void	validate_map(char **map, int height, t_player player, t_cub *cub)
+void	validate_map(char **map, int height, t_cub *cub)
 {
 	int	i;
 
@@ -169,6 +164,6 @@ void	validate_map(char **map, int height, t_player player, t_cub *cub)
 	}
 	if (!check_conditions(map, height))
 		clean_up(cub, "Invalid border");
-	if (!check_player(map, height, player))
+	if (!check_player(map, height))
 		clean_up(cub, "Invalid player position");
 }

@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 12:01:41 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/01 14:06:53 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:11:50 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	destroyer(t_cub *cub)
 {
+	free_map(cub->map);
+	free_textures(cub->txtr);
 	mlx_destroy_image(cub->mlx_ptr, cub->textures.img_ptr_north);
 	mlx_destroy_image(cub->mlx_ptr, cub->textures.img_ptr_south);
 	mlx_destroy_image(cub->mlx_ptr, cub->textures.img_ptr_east);
