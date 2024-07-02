@@ -148,5 +148,7 @@ int					where_x_on_texture(int face, t_cub *cub, double wall_x);
 double				where_wall_hit(int face, t_cub *cub);
 void				get_draw_coordinates(t_ray *ray);
 void				get_wall_texture(t_ray *ray, int side);
+void				draw_minimap(t_cub *cub);
+void				draw_pixel(t_img *img, int x, int y, int color);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:42:01 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/01 14:07:06 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/02 09:51:56 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int	cast_ray(t_cub *cub)
 		get_wall_texture(&cub->ray, wall_orientation);
 		draw_image_into_buffer(cub, &img, &cub->ray, &cub->textures);
 	}
+	draw_minimap(cub);
 	mlx_put_image_to_window(cub->mlx_ptr, cub->win_ptr, img.img_ptr, 0, 0);
 	mlx_destroy_image(cub->mlx_ptr, img.img_ptr);
 	return (0);
