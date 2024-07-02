@@ -57,20 +57,18 @@ int	main(int argc, char **argv)
 	{
 		init_struct(&cub, argv[1]);
 		parsing(argv[1], &cub);
-		// set_player(&cub, &cub.player);
-		// cub.mlx_ptr = mlx_init();
-		// if (!cub.mlx_ptr)
-		// 	return (1);
-		// cub.win_ptr = mlx_new_window(cub.mlx_ptr, WIDTH, HEIGHT, "cub3d");
-		// if (!cub.win_ptr)
-		// 	return (free(cub.mlx_ptr), 1);
-		// load_textures(&cub);
-		// mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
-		// mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
-		// mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
-		// mlx_loop(cub.mlx_ptr);
-		free_map(cub.map);
-		free_textures(cub.txtr);
+		set_player(&cub, &cub.player);
+		cub.mlx_ptr = mlx_init();
+		if (!cub.mlx_ptr)
+			return (1);
+		cub.win_ptr = mlx_new_window(cub.mlx_ptr, WIDTH, HEIGHT, "cub3d");
+		if (!cub.win_ptr)
+			return (free(cub.mlx_ptr), 1);
+		load_textures(&cub);
+		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
+		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
+		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
+		mlx_loop(cub.mlx_ptr);
 	}
 	else
 	{
