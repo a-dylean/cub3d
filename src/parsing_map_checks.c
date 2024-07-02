@@ -30,10 +30,10 @@ static int	length_check(char *row_to_compare, char *curr_row, int i)
 
 static int	spaces_check(char *row_to_compare, char *curr_row, int i)
 {
-	// if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row))
-	// {
-	// 	return (1);
-	// }
+	if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row))
+	{
+		return (1);
+	}
 	if ((row_to_compare && ft_isspace(row_to_compare[i])))
 	{
 		if (curr_row[i] != '1' && curr_row[i] != ' ')
