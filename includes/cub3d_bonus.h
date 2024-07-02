@@ -1,11 +1,10 @@
-#ifndef CUB3D_H
-# define CUB3D_H
+#ifndef CUB3D_BONUS_H
+# define CUB3D_BONUS_H
 
 # include "../libft/libft.h"
 # include <../mlx/mlx.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
-# include <mlx.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -58,15 +57,14 @@ typedef struct s_ray
 
 typedef struct s_player // everything is declared as double, math functions take them as parameters
 {
-	char letter;
-	double x;       /*initial x position*/
-	double y;       /*initial y position*/
-	double dir_x;   /*initial direction x*/
-	double dir_y;   /*initial direction y*/
-	double plane_x; /* Camera plane X*/
-	double plane_y; /* Camera plane Y*/
+	double	x; 		/*initial x position*/
+	double	y; 		/*initial y position*/
+	double	dir_x; 	/*initial direction x*/
+	double	dir_y; 	/*initial direction y*/
+	double	plane_x;/* Camera plane X*/
+	double	plane_y;/* Camera plane Y*/
 	double	delta_camera_x;
-}					t_player;
+}	t_player;
 
 typedef struct s_textures
 {
@@ -102,7 +100,6 @@ typedef struct s_txtr
 
 typedef struct s_cub
 {
-	char **config_info;
 	char			**map;
 	int				map_height;
 	int				map_width;
@@ -117,9 +114,7 @@ typedef struct s_cub
 
 /* Parsing */
 
-void parsing(char *path, t_cub *cub);
-void validate_map(char **map, int rows, t_player player, t_cub *cub);
-int empty_or_spaces_only(char *str);
+void				parse_input(char *path, t_cub *cub);
 void				set_player(t_cub *cub, t_player *player);
 
 /* Utils */
@@ -128,35 +123,15 @@ void				exit_with_error(char *error);
 void				free_and_exit(char *msg, t_cub *cub, char *new_line);
 int					valid_format(char *filename);
 void				free_map(char **map);
-int					get_map_height(char **config);
-int					array_len(char **array);
-void free_array(char **str);
-int list_len(t_txtr *list);
-int has_duplicates(t_txtr *list);
-int str_is_numeric(char *str);
-int invalid_commas(char *line);
-void	init_empty_map(t_cub *cub);
-int	map_line(char *line);
-void free_textures(t_txtr *txtr);
-void clean_up(t_cub *cub, char* error);
+int					get_map_height(char *filename);
 
 /* MLX Utils */
 int					destroyer(t_cub *cub);
 int					key_press(int keycode, t_cub *cub);	
 
 /* Textures */
-int is_texture(char *id);
-char *get_path(char *line);
-void parse_texture(char **nodes, t_cub *cub);
-void	add_txtr_back(t_txtr **tokens, t_txtr *new_node);
+void				add_txtr_back(t_txtr **txtr, t_txtr *new);
 t_txtr				*new_txtr(char *orientation, char *path);
-void textures_errors_check(t_cub *cub);
-
-/* Colors */
-int is_color(char *id);
-void colors_errors_check(t_cub *cub);
-void	parse_color(char *line, t_cub *cub, char** color_ids);
-
 
 /* Raycasting */
 int 				cast_ray(t_cub *cub);
