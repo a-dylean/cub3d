@@ -14,7 +14,6 @@ int	top_and_bottom_check(char *str)
 	return (1);
 }
 
-
 int	empty_or_spaces_only(char *str)
 {
 	int	i;
@@ -96,8 +95,8 @@ int	spaces_check(char *row_to_compare, char *curr_row, int i)
 
 int	check_conditions(char **arr, int rows)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 1;
 	while (i < rows)
@@ -133,8 +132,8 @@ int	check_player(char **arr, int rows, t_player player)
 		j = 0;
 		while (arr[i][j])
 		{
-			if (arr[i][j] == 'N' || arr[i][j] == 'W'
-				|| arr[i][j] == 'E'|| arr[i][j] == 'S')
+			if (arr[i][j] == 'N' || arr[i][j] == 'W' || arr[i][j] == 'E'
+				|| arr[i][j] == 'S')
 			{
 				player.x = j;
 				player.y = i;

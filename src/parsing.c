@@ -93,7 +93,6 @@ void	parse_textures_and_colors(char **nodes, char *line, t_cub *cub)
 		parse_color(line, cub, nodes);
 	}
 }
-		
 
 void	parse_config(t_cub *cub)
 {
@@ -121,27 +120,27 @@ void	parse_config(t_cub *cub)
 	}
 }
 
-void	print_parsing(t_cub *cub)
-{
-	t_txtr	*current;
+// void	print_parsing(t_cub *cub)
+// {
+// 	t_txtr	*current;
 
-	printf("Map height: %d\n", cub->map_height);
-	printf("Map width: %d\n", cub->map_width);
-	printf("Map:\n");
-	for (int i = 0; i < cub->map_height; i++)
-	{
-		printf("map line[%d]: %s\n", i, cub->map[i]);
-	}
-	printf("Floor color: %d\n", cub->textures.floor_color);
-	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
-	current = cub->txtr;
-	while (current)
-	{
-		printf("Texture orientation: %s\n", current->orientation);
-		printf("Texture path: %s\n", current->path);
-		current = current->next;
-	}
-}
+// 	printf("Map height: %d\n", cub->map_height);
+// 	printf("Map width: %d\n", cub->map_width);
+// 	printf("Map:\n");
+// 	for (int i = 0; i < cub->map_height; i++)
+// 	{
+// 		printf("map line[%d]: %s\n", i, cub->map[i]);
+// 	}
+// 	printf("Floor color: %d\n", cub->textures.floor_color);
+// 	printf("Ceiling color: %d\n", cub->textures.ceiling_color);
+// 	current = cub->txtr;
+// 	while (current)
+// 	{
+// 		printf("Texture orientation: %s\n", current->orientation);
+// 		printf("Texture path: %s\n", current->path);
+// 		current = current->next;
+// 	}
+// }
 
 int	count_lines_in_file(char *path)
 {
