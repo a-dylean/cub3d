@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/02 14:39:02 by jlabonde          #+#    #+#             */
+/*   Updated: 2024/07/02 14:39:03 by jlabonde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d_bonus.h"
 
 void	init_struct(t_cub *cub, char *filename)
@@ -23,30 +35,6 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->player.delta_camera_x = 0;
 	cub->textures.floor_color = -1;
 	cub->textures.ceiling_color = -1;
-}
-
-int	load_textures(t_cub *cub) // replace the textures with the correct paths, after parsing
-{
-	int	pos[2];
-
-	cub->textures.img_ptr_north = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-brick-windows.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_north)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-			// implement proper freeing of all the previous allocations for images in case of error + exit program
-	cub->textures.img_ptr_south = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-Japanese-wall-setxcf.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_south)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	cub->textures.img_ptr_west = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-wooden-wall.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_south)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	cub->textures.img_ptr_east = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/32x32-wooden-windows.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_east)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	return (0);
 }
 
 int	main(int argc, char **argv)

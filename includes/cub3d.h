@@ -149,6 +149,7 @@ void parse_texture(char **nodes, t_cub *cub);
 void	add_txtr_back(t_txtr **tokens, t_txtr *new_node);
 t_txtr				*new_txtr(char *orientation, char *path);
 void textures_errors_check(t_cub *cub);
+int	load_textures(t_cub *cub);
 
 /* Colors */
 int					is_color(char *id);

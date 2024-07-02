@@ -25,33 +25,10 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->textures.ceiling_color = -1;
 }
 
-int	load_textures(t_cub *cub) // replace the textures with the correct paths, after parsing
-{
-	int	pos[2];
-
-	cub->textures.img_ptr_north = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/b&w_bricks.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_north)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-			// implement proper freeing of all the previous allocations for images in case of error + exit program
-	cub->textures.img_ptr_south = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/b&w_dots.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_south)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	cub->textures.img_ptr_west = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/b&w_squiggles.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_south)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	cub->textures.img_ptr_east = mlx_xpm_file_to_image(cub->mlx_ptr,
-			"assets/Walls/b&w_star.xpm", &pos[0], &pos[1]);
-	if (!cub->textures.img_ptr_east)
-		return (free(cub->mlx_ptr), free(cub->win_ptr), 1);
-	return (0);
-}
-
 int	main(int argc, char **argv)
 {
-	t_cub cub;
+	t_cub	cub;
+
 	if (argc == 2)
 	{
 		init_struct(&cub, argv[1]);
