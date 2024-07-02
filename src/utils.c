@@ -55,7 +55,7 @@ int	str_is_numeric(char *str)
 	return (1);
 }
 
-int	invalid_commas(char *line)
+void	invalid_commas(char *line, char **color_ids, t_cub *cub)
 {
 	int	i;
 	int	commas;
@@ -68,7 +68,13 @@ int	invalid_commas(char *line)
 			commas++;
 		i++;
 	}
-	return (commas != 2);
+	if (commas != 2)
+	{
+		free_array(color_ids);
+		free(line);
+		clean_up(cub, "Invalid color declaration");
+	}
+	return ;
 }
 
 int	map_line(char *line)
