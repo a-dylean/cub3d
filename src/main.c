@@ -22,6 +22,8 @@ void	init_struct(t_cub *cub, char *filename)
 	cub->player.plane_x = 0;
 	cub->player.plane_y = 0;
 	cub->player.delta_camera_x = 0;
+	cub->textures.floor_color = -1;
+	cub->textures.ceiling_color = -1;
 }
 
 int	load_textures(t_cub *cub) // replace the textures with the correct paths, after parsing
