@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 09:50:36 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/03 09:54:57 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 11:03:33 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_ray
 	double			side_dist_x;
 	double			side_dist_y;
 	double			delta_dist_x;
+	double			delta_dist_y;
 	double			perp_wall_dist;
 	double			total_distance;
 	int				step_x;
