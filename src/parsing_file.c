@@ -3,14 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atonkopi <atonkopi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:16:56 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/02 15:23:04 by atonkopi         ###   ########.fr       */
+/*   Updated: 2024/07/03 13:21:17 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	check_map_is_last(char **config, t_cub *cub)
+{
+	int	i;
+
+	i = cub->map_height - 1;
+	while (config[i] && config[i][0] && (config[i][0] == '1'
+		|| config[i][0] == ' '))
+		i++;
+	while (config[i])
+	{
+		if (config[i][0])
+		{
+			if (config[i][0] == '\0' || config[i][0] == '\n')
+				i++ ;
+			else
+				clean_up(cub, "Map is not the last element in the file");
+		}
+		else
+			i++;
+	}
+}
 
 int	get_map_height(char **config)
 {

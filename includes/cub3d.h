@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:10:24 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/03 09:53:05 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 13:21:01 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ int					map_line(char *line);
 int					check_conditions(char **arr, int rows);
 void				free_textures(t_txtr *txtr);
 void				clean_up(t_cub *cub, char *error);
+void				check_map_is_last(char **config, t_cub *cub);
 
 /* MLX Utils */
 int					destroyer(t_cub *cub);
