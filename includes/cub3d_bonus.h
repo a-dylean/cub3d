@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/03 09:50:36 by jlabonde          #+#    #+#             */
+/*   Updated: 2024/07/03 09:54:57 by jlabonde         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_BONUS_H
 # define CUB3D_BONUS_H
 
@@ -8,6 +20,7 @@
 # include <math.h>
 # include <mlx.h>
 # include <stdio.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -15,36 +28,27 @@
 # define HEIGHT 720
 # define TEXTURE_HEIGHT 32
 # define TEXTURE_WIDTH 32
-# define RED 0x00FF0000
-# define GREEN 0x0000FF00
 # define BLUE 0x000000FF
 # define WHITE 0x00FFFFFF
-# define YELLOW 0x00FFFF00
 # define NORTH 10
 # define SOUTH 11
 # define EAST 12
 # define WEST 13
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
 # define FIELD_OF_VIEW 0.66
 # define SPACES " \t\n\v\f\r"
-/* Structures */
 
+/* Structures */
 typedef struct s_ray
 {
-	int face; // What direction is the wall (NO, SO, EA, WE)
+	int				face;
 	double			camera_x;
 	double			dir_x;
 	double			dir_y;
 	int				map_x;
 	int				map_y;
-	double side_dist_x;
-		// Length of ray from current position to next x or y-side
+	double			side_dist_x;
 	double			side_dist_y;
-	double delta_dist_x; // What direction to step in x or y-direction (either +1 or -1)
-	double			delta_dist_y;
+	double			delta_dist_x;
 	double			perp_wall_dist;
 	double			total_distance;
 	int				step_x;
@@ -53,15 +57,15 @@ typedef struct s_ray
 	int				draw_end;
 }					t_ray;
 
-typedef struct s_player // everything is declared as double math functions take them as parameters
+typedef struct s_player
 {
-	double x;       /*initial x position*/
-	double y;       /*initial y position*/
-	double dir_x;   /*initial direction x*/
-	double dir_y;   /*initial direction y*/
-	double plane_x; /* Camera plane X*/
-	double plane_y; /* Camera plane Y*/
-	double delta_camera_x;
+	double	x;
+	double	y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+	double	delta_camera_x;
 }					t_player;
 
 typedef struct s_textures

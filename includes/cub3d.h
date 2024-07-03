@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:10:24 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/03 09:48:08 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 09:53:05 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <math.h>
 # include <mlx.h>
 # include <stdio.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -27,19 +28,10 @@
 # define HEIGHT 720
 # define TEXTURE_HEIGHT 32
 # define TEXTURE_WIDTH 32
-# define RED 0x00FF0000
-# define GREEN 0x0000FF00
-# define BLUE 0x000000FF
-# define WHITE 0x00FFFFFF
-# define YELLOW 0x00FFFF00
 # define NORTH 10
 # define SOUTH 11
 # define EAST 12
 # define WEST 13
-# define UP 0
-# define DOWN 1
-# define LEFT 2
-# define RIGHT 3
 # define FIELD_OF_VIEW 0.66
 # define SPACES " \t\n\v\f\r"
 
