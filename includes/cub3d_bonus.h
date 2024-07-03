@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 09:50:36 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/03 13:46:26 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 14:42:41 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define WIDTH 1020
-# define HEIGHT 720
+# define WIDTH 1920
+# define HEIGHT 1080
 # define TEXTURE_HEIGHT 32
 # define TEXTURE_WIDTH 32
 # define BLUE 0x000000FF
