@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:16:56 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/03 13:21:34 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 13:32:17 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	check_map_is_last(char **config, t_cub *cub)
 
 	i = cub->map_height - 1;
 	while (config[i] && config[i][0] && (config[i][0] == '1'
-		|| config[i][0] == ' '))
+		|| (config[i][0] == ' ' && ft_strchr(config[i], '1'))))
 		i++;
 	while (config[i])
 	{

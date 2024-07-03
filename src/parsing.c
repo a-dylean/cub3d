@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:56:37 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/03 13:20:42 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 13:25:49 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,10 @@ void	parsing(char *path, t_cub *cub)
 		exit_with_error("Error while reading a file");
 	parse_config(cub);
 	cub->map_height = get_map_height(cub->config_info);
-	check_map_is_last(cub->config_info, cub);
 	init_empty_map(cub);
 	populate_map(cub);
 	validate_map(cub->map, cub->map_height, cub);
+	check_map_is_last(cub->config_info, cub);
 	textures_errors_check(cub);
 	colors_errors_check(cub);
 	free_array(cub->config_info);

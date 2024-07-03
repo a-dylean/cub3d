@@ -1,10 +1,12 @@
 NO assets/Walls/pink.xpm
 SO assets/Walls/light_blue.xpm
 WE assets/Walls/yellow.xpm
-EA assets/Walls/blue.xpm
+
+
+			EA assets/Walls/blue.xpm
 
 C 0,100,0
-F 225,30,0
+F 		225,30,0
 
         1111111111111111111111111
         1000000000110000000000001
@@ -20,3 +22,4 @@ F 225,30,0
 11000001110101011101011110N0111
 11110111 1110101 101111010001
 11111111 11111111111111111111
+ 
