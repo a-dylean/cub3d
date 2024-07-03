@@ -1,51 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_array.c                                      :+:      :+:    :+:   */
+/*   clean_up.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/03 09:46:25 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/03 09:46:26 by jlabonde         ###   ########.fr       */
+/*   Created: 2024/07/02 15:26:46 by atonkopi          #+#    #+#             */
+/*   Updated: 2024/07/03 09:49:33 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d_bonus.h"
 
-void	free_map(char **map)
+void	clean_up(t_cub *cub, char *error)
 {
-	int	i;
-
-	i = 0;
-	if (!map)
-		return ;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
+	if (cub->config_info)
+		free_array(cub->config_info);
+	if (cub->map)
+		free_map(cub->map);
+	if (cub->txtr)
+		free_textures(cub->txtr);
+	if (error)
+		exit_with_error(error);
 }
 
-int	array_len(char **array)
+void	free_and_exit(char *msg, t_cub *cub, char *new_line)
 {
-	int	i;
-
-	i = 0;
-	while (array[i])
-		i++;
-	return (i);
+	if (ft_strlen(new_line) > 0)
+		free(new_line);
+	free_map(cub->map);
+	exit_with_error(msg);
 }
 
-void	free_array(char **str)
+void	exit_with_error(char *error)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
+	printf("Error\n");
+	printf("%s\n", error);
+	exit(1);
 }

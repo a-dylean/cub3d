@@ -7,7 +7,6 @@
 # include <X11/keysym.h>
 # include <math.h>
 # include <mlx.h>
-# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>

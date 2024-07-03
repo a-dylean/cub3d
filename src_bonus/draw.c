@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 11:52:26 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/02 09:52:14 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 09:47:04 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	draw_pixel(t_img *img, int x, int y, int color)
 static int	get_pixel(void *img_ptr, int x, int y)
 {
 	char	*pixel;
-	int		color;
 	char	*data;
 	int		bpp;
 	int		size_line;
@@ -33,8 +32,7 @@ static int	get_pixel(void *img_ptr, int x, int y)
 	if (x < 0 || y < 0)
 		return (0);
 	pixel = data + (y * size_line + x * (bpp / 8));
-	color = *(int *)pixel;
-	return (color);
+	return (*(int *)pixel);
 }
 
 /*draw the pixels of the stripe as a vertical line*/
