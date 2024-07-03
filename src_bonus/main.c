@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:39:02 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/03 09:28:13 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 11:40:40 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	main(int argc, char **argv)
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
+		mlx_hook(cub.win_ptr, MotionNotify, PointerMotionMask,
+			&mouse_move, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}
 	else
