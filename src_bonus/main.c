@@ -6,22 +6,19 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 14:39:02 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/02 14:39:03 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 09:28:13 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d_bonus.h"
 
-void	init_struct(t_cub *cub, char *filename)
+void	init_struct(t_cub *cub)
 {
-	(void)filename;
 	cub->map = NULL;
 	cub->map_height = 0;
 	cub->txtr = NULL;
 	cub->mlx_ptr = NULL;
 	cub->win_ptr = NULL;
-	// cub->win_height = 0;
-	// cub->win_width = 0;
 	cub->textures.img_ptr_north = NULL;
 	cub->textures.img_ptr_south = NULL;
 	cub->textures.img_ptr_east = NULL;
@@ -39,10 +36,11 @@ void	init_struct(t_cub *cub, char *filename)
 
 int	main(int argc, char **argv)
 {
-	t_cub cub;
+	t_cub	cub;
+
 	if (argc == 2)
 	{
-		init_struct(&cub, argv[1]);
+		init_struct(&cub);
 		parsing(argv[1], &cub);
 		set_player(&cub, &cub.player);
 		cub.mlx_ptr = mlx_init();
@@ -54,13 +52,10 @@ int	main(int argc, char **argv)
 		load_textures(&cub);
 		mlx_loop_hook(cub.mlx_ptr, &cast_ray, &cub);
 		mlx_hook(cub.win_ptr, 17, 1L << 17, &destroyer, &cub);
-		mlx_hook(cub.win_ptr, MotionNotify, PointerMotionMask, &mouse_move, &cub);
 		mlx_hook(cub.win_ptr, KeyPress, KeyPressMask, &key_press, &cub);
 		mlx_loop(cub.mlx_ptr);
 	}
 	else
-	{
 		printf("WRONG INPUT! Try: ./cub3d [PATH TO MAP]\n");
-	}
 	return (0);
 }

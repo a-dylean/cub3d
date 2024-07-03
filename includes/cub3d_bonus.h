@@ -44,8 +44,7 @@ typedef struct s_ray
 	double side_dist_x;
 		// Length of ray from current position to next x or y-side
 	double			side_dist_y;
-	double delta_dist_x; // What direction to step in x or y-direction (either
-		+1 or -1)
+	double delta_dist_x; // What direction to step in x or y-direction (either +1 or -1)
 	double			delta_dist_y;
 	double			perp_wall_dist;
 	double			total_distance;
@@ -55,8 +54,7 @@ typedef struct s_ray
 	int				draw_end;
 }					t_ray;
 
-typedef struct s_player // everything is declared as double,
-	math functions take them as parameters
+typedef struct s_player // everything is declared as double math functions take them as parameters
 {
 	double x;       /*initial x position*/
 	double y;       /*initial y position*/
@@ -119,6 +117,8 @@ void				parsing(char *path, t_cub *cub);
 void				validate_map(char **map, int rows, t_cub *cub);
 int					empty_or_spaces_only(char *str);
 void				set_player(t_cub *cub, t_player *player);
+int					read_file_into_memory(char *path, t_cub *cub);
+int					get_rgb_int(char **colors);
 
 /* Utils */
 
@@ -132,11 +132,12 @@ void				free_array(char **str);
 int					list_len(t_txtr *list);
 int					has_duplicates(t_txtr *list);
 int					str_is_numeric(char *str);
-int					invalid_commas(char *line);
+void				invalid_commas(char *line, char **color_ids, t_cub *cub);
 void				init_empty_map(t_cub *cub);
 int					map_line(char *line);
 void				free_textures(t_txtr *txtr);
 void				clean_up(t_cub *cub, char *error);
+int					check_conditions(char **arr, int rows);
 
 /* MLX Utils */
 int					destroyer(t_cub *cub);

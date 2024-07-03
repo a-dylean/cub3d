@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_colors_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
+/*   By: atonkopi <atonkopi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:06:22 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/03 09:41:56 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:10:37 by atonkopi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d_bonus.h"
+#include "cub3d.h"
 
 void	invalid_commas(char *line, char **color_ids, t_cub *cub)
 {

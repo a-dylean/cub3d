@@ -6,13 +6,13 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 09:48:07 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/02 13:44:46 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 09:38:18 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d_bonus.h"
 
-void	draw_square(t_cub *cub, int x, int y, int color)
+static void	draw_square(t_cub *cub, int x, int y, int color)
 {
 	int	i;
 	int	j;
@@ -32,6 +32,17 @@ void	draw_square(t_cub *cub, int x, int y, int color)
 	}
 }
 
+static void	draw_player_minimap(t_cub *cub, int tile_size,
+	int complementary_color)
+{
+	if (((~cub->textures.ceiling_color) & 0xFFFFFF) == complementary_color)
+		complementary_color = BLUE;
+	else
+		complementary_color = (~cub->textures.ceiling_color) & 0xFFFFFF;
+	draw_square(cub, (int)(cub->player.x * tile_size),
+		(int)(cub->player.y * tile_size), complementary_color);
+}
+
 void	draw_minimap(t_cub *cub)
 {
 	int	tile_size;
@@ -48,19 +59,15 @@ void	draw_minimap(t_cub *cub)
 		while (cub->map[i][j])
 		{
 			if (cub->map[i][j] == '1')
-				draw_square(cub, j * tile_size, i * tile_size, complementary_color);
+				draw_square(cub, j * tile_size, i * tile_size,
+					complementary_color);
 			else if (cub->map[i][j] != ' ' && cub->map[i][j] != '1'
 				&& cub->map[i][j] != '\n')
 				draw_square(cub, j * tile_size, i * tile_size,
-					cub->textures.ceiling_color);
+					WHITE);
 			j++;
 		}
 		i++;
 	}
-	if (((~cub->textures.ceiling_color) & 0x00FFFF) == complementary_color)
-		complementary_color = (~cub->textures.ceiling_color) & 0x000FFF;
-	else
-		complementary_color = (~cub->textures.ceiling_color) & 0x0000FF;
-	draw_square(cub, (int)(cub->player.x * tile_size),
-		(int)(cub->player.y * tile_size), complementary_color);
+	draw_player_minimap(cub, tile_size, complementary_color);
 }
