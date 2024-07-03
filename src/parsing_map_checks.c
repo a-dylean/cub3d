@@ -6,7 +6,7 @@
 /*   By: atonkopi <atonkopi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:24:23 by atonkopi          #+#    #+#             */
-/*   Updated: 2024/07/02 18:35:18 by atonkopi         ###   ########.fr       */
+/*   Updated: 2024/07/03 11:32:29 by atonkopi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 static int	length_check(char *row_to_compare, char *curr_row, int i)
 {
-	// if (i > (int)ft_strlen(row_to_compare) || i > (int)ft_strlen(curr_row))
-	// {
-	// 	return (1);
-	// }
 	if (row_to_compare
 		&& (int)ft_strlen(curr_row) > (int)ft_strlen(row_to_compare)
 		&& i >= (int)ft_strlen(row_to_compare))
