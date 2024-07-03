@@ -6,7 +6,7 @@
 /*   By: jlabonde <jlabonde@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 09:50:36 by jlabonde          #+#    #+#             */
-/*   Updated: 2024/07/03 13:21:08 by jlabonde         ###   ########.fr       */
+/*   Updated: 2024/07/03 13:46:26 by jlabonde         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_cub
 	char			**config_info;
 	char			**map;
 	int				map_height;
+	int				map_start;
 	t_img			*img;
 	void			*mlx_ptr;
 	void			*win_ptr;
@@ -130,7 +131,7 @@ void				exit_with_error(char *error);
 void				free_and_exit(char *msg, t_cub *cub, char *new_line);
 int					valid_format(char *filename);
 void				free_map(char **map);
-int					get_map_height(char **config);
+int					get_map_height(char **config, t_cub *cub);
 int					array_len(char **array);
 void				free_array(char **str);
 int					list_len(t_txtr *list);
